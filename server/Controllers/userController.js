@@ -11,10 +11,11 @@ const getUserForSidebar = async (req, res, next) => {
       .sort({ updatedAt: -1 });
 
     const conversation = startedConversation.map((convo) => {
-      const isFirstParticipant = convo.participants[0]._id === req.user.userId;
+      console.log(convo.participants[0]._id.toString() == req.user.userId)
+      const isFirstParticipant = convo.participants[0]._id.toString() == req.user.userId;
       const user = isFirstParticipant
-        ? convo.participants[0]
-        : convo.participants[1];
+      ? convo.participants[1]
+        : convo.participants[0];
 
       return {
         user: {

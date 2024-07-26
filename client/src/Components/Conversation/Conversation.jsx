@@ -65,16 +65,24 @@ const Conversation = () => {
                 <p className="loading loading-spinner"></p>
               </div>
             )}
-            {!loading && messages.length > 0 ? (
+            {!loading && messages.length > 0 && (
               <>
                 {messages.map((message) => (
                   <Message message={message} key={message._id} />
                 ))}
                 <div ref={messagesEndRef} />
               </>
-            ) : (
+            )}
+
+            {!loading && messages.length === 0 && (
               <div className="h-full w-full flex items-start justify-center">
-                <p className="text-slate-400 font-semibold text-center p-2 border border-slate-500 rounded-lg bg-slate-800">Start a conversation with <span className="text-blue-600">{selectedConversation?.firstName}</span> by sending a message.</p>
+                <p className="text-slate-400 font-semibold text-center p-2 border border-slate-500 rounded-lg bg-slate-800">
+                  Start a conversation with{" "}
+                  <span className="text-blue-600">
+                    {selectedConversation?.firstName}
+                  </span>{" "}
+                  by sending a message.
+                </p>
               </div>
             )}
           </div>
@@ -84,7 +92,9 @@ const Conversation = () => {
           </div>
         </div>
       ) : (
-        <div className={`w-full h-full md:flex items-center justify-center hidden`}>
+        <div
+          className={`w-full h-full md:flex items-center justify-center hidden`}
+        >
           <div className="text-center">
             <img
               src={NoConvo}

@@ -1,11 +1,37 @@
+import { useEffect } from "react";
 import { useSocketContext } from "../../Context/SocketContext";
 import useGetConversation from "../../Hooks/useGetConversation";
 import useConversation from "../../Zustand/useConversation";
 
 const SidebarConversation = () => {
   const { selectedConversation, setSelectedConversation } = useConversation();
-  const { onlineUsers } = useSocketContext();
-  const { loading, users } = useGetConversation();
+  const { onlineUsers, socket } = useSocketContext();
+  const { loading, users, setUsers } = useGetConversation();
+
+  useEffect(() => {
+    socket?.on('conversationUpdated', (updatedConversation) => {
+      setUsers((prevUsers) => {
+        return prevUsers.map((convo) =>
+          convo.user._id === updatedConversation.participants[0]._id ||
+          convo.user._id === updatedConversation.participants[1]._id
+            ? {
+                ...convo,
+                lastMessage: {
+                  message: updatedConversation.messages[updatedConversation.messages.length - 1].message,
+                },
+                lastMessageTime: updatedConversation.updatedAt,
+              }
+            : convo
+        );
+      });
+
+    });
+
+    return () => {
+      socket?.off('newMessage');
+    };
+  }, [socket, setUsers]);
+
   return (
     <div className=" w-full h-full border-r border-slate-800">
       <div className="p-3 border-b border-slate-800">

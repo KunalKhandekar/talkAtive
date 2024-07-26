@@ -39,6 +39,7 @@ const useGetConversation = () => {
   return {
     loading,
     users,
+    setUsers
   };
 };
 

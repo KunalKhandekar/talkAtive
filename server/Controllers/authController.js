@@ -68,15 +68,16 @@ const Login = async (req, res, next) => {
     return next(errorHandler(400, "Email or Password is incorrect"));
   }
 
-  
   const isMatch = await bcrypt.compare(password, user.password);
-  
+
   if (!isMatch) {
     return next(errorHandler(400, "Email or Password is incorrect"));
   }
-  
+
   if (user.isLogin) {
-    return next(errorHandler(400, "User is currently logged in from another device"));
+    return next(
+      errorHandler(400, "User is currently logged in from another device")
+    );
   }
 
   user.isLogin = true;
@@ -107,11 +108,19 @@ const Login = async (req, res, next) => {
 };
 
 const Logout = async (req, res) => {
-  await UserModel.findOneAndUpdate({ _id: req.body.userId, isLogin: false });
-  return res
-    .clearCookie("token")
-    .status(200)
-    .json({ message: "Logout Successful", success: true });
+  try {
+    await UserModel.findOneAndUpdate(
+      { _id: req.body.userId },
+      { $set: { isLogin: false } }
+    );
+    return res
+      .clearCookie("token")
+      .status(200)
+      .json({ message: "Logout Successful", success: true });
+  } catch (error) {
+    console.error("Logout Error:", error);
+    return res.status(500).json({ message: "Logout Failed", success: false });
+  }
 };
 
 module.exports = { Register, Login, Logout };

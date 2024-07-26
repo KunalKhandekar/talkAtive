@@ -36,6 +36,17 @@ const sendMessage = async (req, res, next) => {
       io.to(receiverSocketId).emit("newMessage", newMessage);
     };
 
+    // Emitting conversationUpdated event
+    const UpdatedConversation = await ConversationModel.findById(Conversation?._id).populate("participants")
+    .populate("messages");
+
+    UpdatedConversation.participants.forEach(participant => {
+      const socketId = getSocketId(participant._id.toString());
+      if (socketId) {
+        io.to(socketId).emit('conversationUpdated', UpdatedConversation);
+      }
+    });
+
     return res.status(201).json({
       success: true,
       message: "Message sent",
