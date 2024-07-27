@@ -7,13 +7,20 @@ import Message from "./Message";
 import { useSocketContext } from "../../Context/SocketContext";
 import useListenMessage from "../../Hooks/useListenMessage";
 import { useEffect, useRef } from "react";
+import Typing from "./Typing";
+import useDebounce from "../../Hooks/useDebouncing";
 
 const Conversation = () => {
-  const { selectedConversation, setSelectedConversation } = useConversation();
+  const { selectedConversation, setSelectedConversation, typingUsers } =
+    useConversation();
   const { messages, loading } = useGetMessage();
   const { onlineUsers } = useSocketContext();
   const messagesEndRef = useRef(null);
   const isOnline = onlineUsers.includes(selectedConversation?._id);
+  const isTyping = typingUsers[selectedConversation?._id];
+
+  // Debounce the typing state
+  const debouncedIsTyping = useDebounce(isTyping, 100);
 
   useListenMessage();
 
@@ -22,10 +29,10 @@ const Conversation = () => {
   };
 
   useEffect(() => {
-    if (!loading && messages.length > 0) {
+    if (!loading && (messages.length > 0 || debouncedIsTyping !== undefined)) {
       scrollToBottom();
     }
-  }, [loading, messages]);
+  }, [loading, messages, debouncedIsTyping]);
 
   return (
     <>
@@ -42,7 +49,7 @@ const Conversation = () => {
             <div className="flex gap-4">
               <div className={`avatar ${isOnline ? "online" : ""}`}>
                 <div className="w-16 rounded-full">
-                  <img src={selectedConversation?.profilePic} />
+                  <img src={selectedConversation?.profilePic} alt="Profile" />
                 </div>
               </div>
 
@@ -53,7 +60,7 @@ const Conversation = () => {
                     selectedConversation?.lastName}
                 </p>
                 <p className="text-slate-400">
-                  {isOnline ? "online" : "offline"}
+                  {debouncedIsTyping ? "typing..." : isOnline ? "online" : "offline"}
                 </p>
               </div>
             </div>
@@ -70,6 +77,7 @@ const Conversation = () => {
                 {messages.map((message) => (
                   <Message message={message} key={message._id} />
                 ))}
+                {debouncedIsTyping && <Typing />}
                 <div ref={messagesEndRef} />
               </>
             )}
@@ -88,7 +96,7 @@ const Conversation = () => {
           </div>
 
           <div className="h-16 border-t border-slate-800">
-            <MessageInput />
+            <MessageInput toUserId={selectedConversation?._id} />
           </div>
         </div>
       ) : (
@@ -99,8 +107,7 @@ const Conversation = () => {
             <img
               src={NoConvo}
               alt="NoConvo"
-              className="
-            w-[300px] h-auto "
+              className="w-[300px] h-auto "
             />
             <p className="text-3xl font-semibold">Select a conversation</p>
             <p className="text-slate-400">to start messaging</p>

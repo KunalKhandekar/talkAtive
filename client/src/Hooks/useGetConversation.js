@@ -21,7 +21,6 @@ const useGetConversation = () => {
 
     if (data.success) {
       setUsers(data.users);
-      console.log(data.users);
     } else {
       if (data?.message === "Session timeout, Login again !!") {
         localStorage.removeItem("user");

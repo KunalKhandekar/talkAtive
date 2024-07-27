@@ -4,12 +4,18 @@ import useGetConversation from "../../Hooks/useGetConversation";
 import useConversation from "../../Zustand/useConversation";
 
 const SidebarConversation = () => {
-  const { selectedConversation, setSelectedConversation } = useConversation();
+  const {
+    selectedConversation,
+    setSelectedConversation,
+    typingUsers,
+    setTypingUser,
+    removeTypingUser,
+  } = useConversation();
   const { onlineUsers, socket } = useSocketContext();
   const { loading, users, setUsers } = useGetConversation();
 
   useEffect(() => {
-    socket?.on('conversationUpdated', (updatedConversation) => {
+    socket?.on("conversationUpdated", (updatedConversation) => {
       setUsers((prevUsers) => {
         return prevUsers.map((convo) =>
           convo.user._id === updatedConversation.participants[0]._id ||
@@ -17,20 +23,32 @@ const SidebarConversation = () => {
             ? {
                 ...convo,
                 lastMessage: {
-                  message: updatedConversation.messages[updatedConversation.messages.length - 1].message,
+                  message:
+                    updatedConversation.messages[
+                      updatedConversation.messages.length - 1
+                    ].message,
                 },
                 lastMessageTime: updatedConversation.updatedAt,
               }
             : convo
         );
       });
+    });
 
+    socket?.on("typing", ({ fromUserId }) => {
+      setTypingUser(fromUserId, true);
+    });
+
+    socket?.on("stopTyping", ({ fromUserId }) => {
+      removeTypingUser(fromUserId);
     });
 
     return () => {
-      socket?.off('newMessage');
+      socket?.off("conversationUpdated");
+      socket?.off("typing");
+      socket?.off("stopTyping");
     };
-  }, [socket, setUsers]);
+  }, [socket, setUsers, setTypingUser, removeTypingUser]);
 
   return (
     <div className=" w-full h-full border-r border-slate-800">
@@ -44,8 +62,11 @@ const SidebarConversation = () => {
       ) : (
         <div className="flex flex-col gap-1.5 w-full h-[calc(100vh-109px)] md:h-[calc(100vh-112px)] p-1.5 overflow-auto">
           {users?.map((data) => {
-            const isSelectedUser = selectedConversation?._id === data?.user?._id;
+            const isSelectedUser =
+              selectedConversation?._id === data?.user?._id;
             const isOnline = onlineUsers.includes(data?.user?._id);
+            const isTyping = typingUsers[data?.user?._id] || false;
+
             return (
               <div
                 className={`w-full rounded-md p-3 border ${
@@ -66,7 +87,9 @@ const SidebarConversation = () => {
                     <p className="text-lg font-semibold line-clamp-1">
                       {data?.user?.firstName + " " + data?.user?.lastName}
                     </p>
-                    <p className="text-slate-400 line-clamp-1">{data?.lastMessage?.message}</p>
+                    <p className="text-slate-400 line-clamp-1">
+                      {isTyping ? "Typing..." : data?.lastMessage?.message}
+                    </p>
                   </div>
                 </div>
               </div>
