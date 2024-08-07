@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import { useSocketContext } from "../../Context/SocketContext";
 import useGetConversation from "../../Hooks/useGetConversation";
 import useConversation from "../../Zustand/useConversation";
+import moment from "moment";
+import { formatDate } from "../../Utils/dateFormater";
 
 const SidebarConversation = () => {
   const {
@@ -15,25 +17,29 @@ const SidebarConversation = () => {
   const { loading, users, setUsers } = useGetConversation();
 
   useEffect(() => {
-    socket?.on("conversationUpdated", (updatedConversation) => {
-      setUsers((prevUsers) => {
-        return prevUsers.map((convo) =>
-          convo.user._id === updatedConversation.participants[0]._id ||
-          convo.user._id === updatedConversation.participants[1]._id
-            ? {
-                ...convo,
-                lastMessage: {
-                  message:
-                    updatedConversation.messages[
-                      updatedConversation.messages.length - 1
-                    ].message,
-                },
-                lastMessageTime: updatedConversation.updatedAt,
-              }
-            : convo
-        );
-      });
-    });
+    socket?.on(
+      "conversationUpdated",
+      ({ updatedConversation, unreadMessageCount }) => {
+        setUsers((prevUsers) => {
+          return prevUsers.map((convo) =>
+            convo.user._id === updatedConversation.participants[0]._id ||
+            convo.user._id === updatedConversation.participants[1]._id
+              ? {
+                  ...convo,
+                  lastMessage: {
+                    message:
+                      updatedConversation.messages[
+                        updatedConversation.messages.length - 1
+                      ].message,
+                  },
+                  lastMessageTime: updatedConversation.updatedAt,
+                  unreadMessageCount: unreadMessageCount,
+                }
+              : convo
+          );
+        });
+      }
+    );
 
     socket?.on("typing", ({ fromUserId }) => {
       setTypingUser(fromUserId, true);
@@ -66,6 +72,7 @@ const SidebarConversation = () => {
               selectedConversation?._id === data?.user?._id;
             const isOnline = onlineUsers.includes(data?.user?._id);
             const isTyping = typingUsers[data?.user?._id] || false;
+            const unreadMsgCount = data?.unreadMessageCount;
 
             return (
               <div
@@ -87,9 +94,23 @@ const SidebarConversation = () => {
                     <p className="text-lg font-semibold line-clamp-1">
                       {data?.user?.firstName + " " + data?.user?.lastName}
                     </p>
-                    <p className="text-slate-400 line-clamp-1">
-                      {isTyping ? "Typing..." : data?.lastMessage?.message}
-                    </p>
+                    <div
+                      className={`text-slate-400 line-clamp-1 flex items-center w-full ${
+                        unreadMsgCount >= 1 ? "font-semibold text-zinc-300" : ""
+                      }`}
+                    >
+                      {unreadMsgCount === 0
+                        ? isTyping
+                          ? "Typing..."
+                          : data?.lastMessage?.message
+                        : `${
+                            unreadMsgCount > 4 ? "4+" : unreadMsgCount
+                          } messages`}
+
+                      <div className={`m-2 p-0.5 w-1 h-1 rounded-full ${unreadMsgCount >= 1 ? "bg-blue-700" : "bg-zinc-400"}`}></div>
+
+                      <div>{formatDate(data?.lastMessageTime)}</div>
+                    </div>
                   </div>
                 </div>
               </div>

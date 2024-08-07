@@ -15,6 +15,13 @@ const MessageInput = ({ toUserId }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    const validInput = input.trim();
+
+    if (validInput === "") {
+      setInput("");
+      return;
+    }
+
     if (input) {
       sendMessage(input);
       setInput("");

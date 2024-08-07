@@ -20,8 +20,8 @@ const useConversation = create((set) => ({
       },
     })),
   removeTypingUser: (userId) =>
-    set((state) => {
-      const { [userId]: _, ...rest } = state.typingUsers;
+    set((state) => { 
+      const { [userId]: _, ...rest } = state.typingUsers; //[userId]: _ (Will delete the user Key-value)
       return { typingUsers: rest };
     }),
 }));

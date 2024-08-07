@@ -1,22 +1,30 @@
 const ConversationModel = require("../Models/conversationModel");
+const MessageModel = require("../Models/messageModel");
 const UserModel = require("../Models/userModel");
+
 
 const getUserForSidebar = async (req, res, next) => {
   try {
-    const startedConversation = await ConversationModel.find({
+    const startedConversations = await ConversationModel.find({
       participants: { $in: [req.user.userId] },
     })
       .populate("participants")
       .populate("messages")
       .sort({ updatedAt: -1 });
 
-    const conversation = startedConversation.map((convo) => {
+    const conversations = await Promise.all(startedConversations.map(async (convo) => {
       const isFirstParticipant = convo.participants[0]._id.toString() == req.user.userId;
-      const user = isFirstParticipant
-      ? convo.participants[1]
-        : convo.participants[0];
+      const user = isFirstParticipant ? convo.participants[1] : convo.participants[0];
+
+      // Calculate unread message count
+      const unreadMessageCount = await MessageModel.countDocuments({
+        receiverId: req.user.userId,
+        senderId: user._id,
+        seen: false
+      });
 
       return {
+        _id: convo._id,
         user: {
           _id: user._id,
           firstName: user.firstName,
@@ -27,10 +35,11 @@ const getUserForSidebar = async (req, res, next) => {
           message: convo.messages[convo.messages.length - 1].message,
         },
         lastMessageTime: convo.updatedAt,
+        unreadMessageCount,
       };
-    });
+    }));
 
-    return res.status(200).json({ success: true, users: conversation });
+    return res.status(200).json({ success: true, users: conversations });
   } catch (error) {
     next(error);
   }

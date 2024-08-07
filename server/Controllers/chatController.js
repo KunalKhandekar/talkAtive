@@ -37,13 +37,21 @@ const sendMessage = async (req, res, next) => {
     };
 
     // Emitting conversationUpdated event
-    const UpdatedConversation = await ConversationModel.findById(Conversation?._id).populate("participants")
+    const updatedConversation = await ConversationModel.findById(Conversation?._id).populate("participants")
     .populate("messages");
 
-    UpdatedConversation.participants.forEach(participant => {
+    updatedConversation.participants.forEach(async (participant) => {
+      const unreadMessageCount = await MessageModel.countDocuments({
+        receiverId: participant._id,
+        seen: false,
+      });
+  
       const socketId = getSocketId(participant._id.toString());
       if (socketId) {
-        io.to(socketId).emit('conversationUpdated', UpdatedConversation);
+        io.to(socketId).emit("conversationUpdated", {
+          updatedConversation,
+          unreadMessageCount,
+        });
       }
     });
 

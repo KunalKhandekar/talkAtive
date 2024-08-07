@@ -32,6 +32,9 @@ io.on("connection", async (socket) => {
     }
   });
 
+  // toUserId means selectedConversation UserID;
+  // fromUserId means Current/Sender UserID;
+  
   socket.on("stopTyping", ({ toUserId }) => {
     const participantSocketId = getSocketId(toUserId);
     if (participantSocketId) {
