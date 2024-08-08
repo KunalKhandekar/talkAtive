@@ -35,16 +35,7 @@ const Conversation = () => {
     if (!loading && (messages.length > 0 || debouncedIsTyping !== undefined)) {
       scrollToBottom();
     }
-  }, [loading, messages, debouncedIsTyping]);
-
-  useEffect(() => {
-    if (selectedConversation) {
-      console.log("Started:::");
-      markMessagesAsSeen(selectedConversation?._id, authUser?._id);
-    }
-  }, [selectedConversation]);
-
-  
+  }, [loading, messages, debouncedIsTyping]);  
 
   return (
     <>

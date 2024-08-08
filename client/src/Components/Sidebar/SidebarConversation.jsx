@@ -21,7 +21,7 @@ const SidebarConversation = () => {
       "conversationUpdated",
       ({ updatedConversation, unreadMessageCount }) => {
         setUsers((prevUsers) => {
-          return prevUsers.map((convo) =>
+          return prevUsers?.map((convo) =>
             convo.user._id === updatedConversation.participants[0]._id ||
             convo.user._id === updatedConversation.participants[1]._id
               ? {
@@ -41,6 +41,11 @@ const SidebarConversation = () => {
       }
     );
 
+    socket?.on("new_Convo_Started", ({ conversations }) => {
+      console.log(conversations);
+      setUsers(conversations);
+    })
+
     socket?.on("typing", ({ fromUserId }) => {
       setTypingUser(fromUserId, true);
     });
@@ -51,6 +56,7 @@ const SidebarConversation = () => {
 
     return () => {
       socket?.off("conversationUpdated");
+      socket?.off("new_Convo_Started");
       socket?.off("typing");
       socket?.off("stopTyping");
     };

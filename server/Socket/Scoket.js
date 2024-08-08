@@ -1,6 +1,8 @@
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
+const MessageModel = require("../Models/messageModel");
+const ConversationModel = require("../Models/conversationModel");
 
 const app = express();
 
@@ -34,11 +36,48 @@ io.on("connection", async (socket) => {
 
   // toUserId means selectedConversation UserID;
   // fromUserId means Current/Sender UserID;
-  
+
   socket.on("stopTyping", ({ toUserId }) => {
     const participantSocketId = getSocketId(toUserId);
     if (participantSocketId) {
       io.to(participantSocketId).emit("stopTyping", { fromUserId: userId });
+    }
+  });
+
+  socket.on("Seen_Unseen_MSG", async ({ receiverId, senderId }) => {
+    try {
+      await MessageModel.updateMany(
+        { senderId: receiverId, receiverId: senderId, seen: { $ne: senderId } },
+        { $push: { seen: senderId } }
+      );
+
+      // Emitting conversationUpdated event
+      const updatedConversation = await ConversationModel.findOne({
+        participants: { $all: [senderId, receiverId] },
+      })
+        .populate("participants")
+        .populate("messages");
+
+      updatedConversation.participants.forEach(async (participant) => {
+        const unreadMessageCount = await MessageModel.countDocuments({
+          receiverId: participant._id,
+          seen: { $ne: participant._id },
+        });
+
+        const socketId = getSocketId(participant._id.toString());
+        if (socketId) {
+          io.to(socketId).emit(
+            "seenMessageUpdated",
+            updatedConversation?.messages
+          );
+          io.to(socketId).emit("conversationUpdated", {
+            updatedConversation,
+            unreadMessageCount,
+          });
+        }
+      });
+    } catch (error) {
+      console.log(error);
     }
   });
 

@@ -1,6 +1,7 @@
 const ConversationModel = require("../Models/conversationModel");
 const MessageModel = require("../Models/messageModel");
 const { io, getSocketId } = require("../Socket/Scoket");
+const { getConversationForSideBar } = require("../Utils/getUserForSideBar");
 
 const sendMessage = async (req, res, next) => {
   try {
@@ -43,15 +44,16 @@ const sendMessage = async (req, res, next) => {
       .populate("participants")
       .populate("messages");
 
-    updatedConversation.participants.forEach(async (participant) => {
+    updatedConversation?.participants?.forEach(async (participant) => {
       const unreadMessageCount = await MessageModel.countDocuments({
         receiverId: participant._id,
         seen: { $ne: participant._id },
       });
 
-
+      const conversations = await getConversationForSideBar(participant._id);
       const socketId = getSocketId(participant._id.toString());
       if (socketId) {
+        io.to(socketId).emit("new_Convo_Started", { conversations });
         io.to(socketId).emit("conversationUpdated", {
           updatedConversation,
           unreadMessageCount,
@@ -116,8 +118,6 @@ const markMessagesAsSeen = async (req, res) => {
       .populate("participants")
       .populate("messages");
 
-    
-
     updatedConversation.participants.forEach(async (participant) => {
       const unreadMessageCount = await MessageModel.countDocuments({
         receiverId: participant._id,
@@ -126,7 +126,10 @@ const markMessagesAsSeen = async (req, res) => {
 
       const socketId = getSocketId(participant._id.toString());
       if (socketId) {
-        io.to(socketId).emit("seenMessageUpdated", updatedConversation?.messages);
+        io.to(socketId).emit(
+          "seenMessageUpdated",
+          updatedConversation?.messages
+        );
         io.to(socketId).emit("conversationUpdated", {
           updatedConversation,
           unreadMessageCount,
