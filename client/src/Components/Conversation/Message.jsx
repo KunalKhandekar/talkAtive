@@ -1,5 +1,6 @@
 import { useAuthContext } from "../../Context/AuthContext";
 import useConversation from "../../Zustand/useConversation";
+import { IoCheckmarkDone } from "react-icons/io5";
 import moment from "moment";
 
 const Message = ({ message }) => {
@@ -28,12 +29,12 @@ const Message = ({ message }) => {
         <p>{message?.message}</p>
       </div>
 
-      <div className="chat-footer opacity-50">
-        {moment(message.createdAt).format("hh:mm a")}
+      <div className="chat-footer opacity-50 flex items-center gap-1 justify-center">
+        <p>{moment(message.createdAt).format("hh:mm a")}</p>
+        {Sender && (
+          <div className={`text-lg ${message.seen.includes(message?.receiverId) ? "text-[rgb(29,78,216)] font-semibold" : "text-slate-200"}`} title={`${message.seen.includes(message?.receiverId) ? "seen" : "unseen"}`}><IoCheckmarkDone /></div>
+        )}
       </div>
-      {Sender && message.seen.includes(message?.receiverId) && (
-        <span className="message-seen">Seen</span>
-      )}
     </div>
   );
 };
