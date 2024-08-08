@@ -9,12 +9,15 @@ import useListenMessage from "../../Hooks/useListenMessage";
 import { useEffect, useRef } from "react";
 import Typing from "./Typing";
 import useDebounce from "../../Hooks/useDebouncing";
+import { useAuthContext } from "../../Context/AuthContext";
+import { markMessagesAsSeen } from "../../Hooks/useSeenMessage";
 
 const Conversation = () => {
   const { selectedConversation, setSelectedConversation, typingUsers } =
     useConversation();
+  const { authUser } = useAuthContext();
   const { messages, loading } = useGetMessage();
-  const { onlineUsers } = useSocketContext();
+  const { onlineUsers, socket } = useSocketContext();
   const messagesEndRef = useRef(null);
   const isOnline = onlineUsers.includes(selectedConversation?._id);
   const isTyping = typingUsers[selectedConversation?._id];
@@ -33,6 +36,15 @@ const Conversation = () => {
       scrollToBottom();
     }
   }, [loading, messages, debouncedIsTyping]);
+
+  useEffect(() => {
+    if (selectedConversation) {
+      console.log("Started:::");
+      markMessagesAsSeen(selectedConversation?._id, authUser?._id);
+    }
+  }, [selectedConversation]);
+
+  
 
   return (
     <>
@@ -60,7 +72,11 @@ const Conversation = () => {
                     selectedConversation?.lastName}
                 </p>
                 <p className="text-slate-400">
-                  {debouncedIsTyping ? "typing..." : isOnline ? "online" : "offline"}
+                  {debouncedIsTyping
+                    ? "typing..."
+                    : isOnline
+                    ? "online"
+                    : "offline"}
                 </p>
               </div>
             </div>
@@ -104,11 +120,7 @@ const Conversation = () => {
           className={`w-full h-full md:flex items-center justify-center hidden`}
         >
           <div className="text-center">
-            <img
-              src={NoConvo}
-              alt="NoConvo"
-              className="w-[300px] h-auto "
-            />
+            <img src={NoConvo} alt="NoConvo" className="w-[300px] h-auto " />
             <p className="text-3xl font-semibold">Select a conversation</p>
             <p className="text-slate-400">to start messaging</p>
           </div>

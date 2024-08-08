@@ -20,8 +20,9 @@ const getUserForSidebar = async (req, res, next) => {
       const unreadMessageCount = await MessageModel.countDocuments({
         receiverId: req.user.userId,
         senderId: user._id,
-        seen: false
+        seen: { $ne: req.user.userId }
       });
+      
 
       return {
         _id: convo._id,

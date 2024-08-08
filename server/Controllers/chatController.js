@@ -34,18 +34,22 @@ const sendMessage = async (req, res, next) => {
 
     if (receiverSocketId) {
       io.to(receiverSocketId).emit("newMessage", newMessage);
-    };
+    }
 
     // Emitting conversationUpdated event
-    const updatedConversation = await ConversationModel.findById(Conversation?._id).populate("participants")
-    .populate("messages");
+    const updatedConversation = await ConversationModel.findById(
+      Conversation?._id
+    )
+      .populate("participants")
+      .populate("messages");
 
     updatedConversation.participants.forEach(async (participant) => {
       const unreadMessageCount = await MessageModel.countDocuments({
         receiverId: participant._id,
-        seen: false,
+        seen: { $ne: participant._id },
       });
-  
+
+
       const socketId = getSocketId(participant._id.toString());
       if (socketId) {
         io.to(socketId).emit("conversationUpdated", {
@@ -92,7 +96,52 @@ const getMessages = async (req, res, next) => {
   }
 };
 
+const markMessagesAsSeen = async (req, res) => {
+  const { receiverId, senderId } = req.body;
+
+  try {
+    await MessageModel.updateMany(
+      { senderId: receiverId, receiverId: senderId, seen: { $ne: senderId } },
+      { $push: { seen: senderId } }
+    );
+
+    // Emitting conversationUpdated event
+    const Conversation = await ConversationModel.findOne({
+      participants: { $all: [senderId, receiverId] },
+    });
+
+    const updatedConversation = await ConversationModel.findById(
+      Conversation?._id
+    )
+      .populate("participants")
+      .populate("messages");
+
+    
+
+    updatedConversation.participants.forEach(async (participant) => {
+      const unreadMessageCount = await MessageModel.countDocuments({
+        receiverId: participant._id,
+        seen: { $ne: participant._id },
+      });
+
+      const socketId = getSocketId(participant._id.toString());
+      if (socketId) {
+        io.to(socketId).emit("seenMessageUpdated", updatedConversation?.messages);
+        io.to(socketId).emit("conversationUpdated", {
+          updatedConversation,
+          unreadMessageCount,
+        });
+      }
+    });
+
+    res.status(200).send("Messages marked as seen");
+  } catch (error) {
+    res.status(500).send("Error marking messages as seen");
+  }
+};
+
 module.exports = {
   sendMessage,
   getMessages,
+  markMessagesAsSeen,
 };

@@ -11,11 +11,13 @@ const Message = ({ message }) => {
     ? authUser?.profilePic
     : selectedConversation?.profilePic;
 
+  console.log(message?.seen);
+
   return (
     <div className={`chat ${Sender ? "chat-end" : "chat-start"}`}>
       <div className="chat-image avatar hidden lg:block">
         <div className="w-10 rounded-full">
-          <img alt="Tailwind CSS chat bubble component" src={profilePic} />
+          <img alt="bubble" src={profilePic} />
         </div>
       </div>
       <div
@@ -29,6 +31,9 @@ const Message = ({ message }) => {
       <div className="chat-footer opacity-50">
         {moment(message.createdAt).format("hh:mm a")}
       </div>
+      {Sender && message.seen.includes(message?.receiverId) && (
+        <span className="message-seen">Seen</span>
+      )}
     </div>
   );
 };
