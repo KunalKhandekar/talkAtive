@@ -3,6 +3,7 @@ const http = require("http");
 const { Server } = require("socket.io");
 const MessageModel = require("../Models/messageModel");
 const ConversationModel = require("../Models/conversationModel");
+const UserModel = require("../Models/userModel");
 
 const app = express();
 
@@ -81,7 +82,7 @@ io.on("connection", async (socket) => {
     }
   });
 
-  socket.on("disconnect", () => {
+  socket.on("disconnect", async () => {
     console.log("User Disconnected: " + socket.id);
     delete userSocketMap[userId];
     io.emit("getOnlineUsers", Object.keys(userSocketMap));
@@ -95,6 +96,7 @@ const getSocketId = (userId) => {
 module.exports = {
   server,
   getSocketId,
+  userSocketMap,
   app,
   io,
 };

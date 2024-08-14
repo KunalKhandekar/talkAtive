@@ -44,7 +44,7 @@ const SidebarConversation = () => {
     socket?.on("new_Convo_Started", ({ conversations }) => {
       console.log(conversations);
       setUsers(conversations);
-    })
+    });
 
     socket?.on("typing", ({ fromUserId }) => {
       setTypingUser(fromUserId, true);
@@ -82,7 +82,7 @@ const SidebarConversation = () => {
 
             return (
               <div
-                className={`w-full rounded-md p-3 border ${
+                className={`sm:w-full rounded-md p-3 border ${
                   isSelectedUser
                     ? "border-blue-600 bg-slate-800"
                     : "border-slate-800 hover:bg-slate-800"
@@ -90,32 +90,38 @@ const SidebarConversation = () => {
                 key={data?.user?._id}
                 onClick={() => setSelectedConversation(data?.user)}
               >
-                <div className="flex items-center gap-4 cursor-pointer">
+                <div className="flex items-center gap-4 cursor-pointer ">
                   <div className={`avatar ${isOnline ? "online" : ""}`}>
                     <div className="w-16 rounded-full">
                       <img src={data?.user?.profilePic} />
                     </div>
                   </div>
-                  <div className="flex flex-col gap-0.5">
+                  <div className="flex flex-col gap-0.5 w-full">
                     <p className="text-lg font-semibold line-clamp-1">
                       {data?.user?.firstName + " " + data?.user?.lastName}
                     </p>
                     <div
-                      className={`text-slate-400 line-clamp-1 flex items-center w-full ${
+                      className={`text-slate-400 flex items-center w-full justify-between  ${
                         unreadMsgCount >= 1 ? "font-semibold text-zinc-300" : ""
                       }`}
                     >
-                      {unreadMsgCount === 0
-                        ? isTyping
-                          ? "Typing..."
-                          : data?.lastMessage?.message
-                        : `${
-                            unreadMsgCount > 4 ? "4+" : unreadMsgCount
-                          } messages`}
+                      <div className="w-[70%] line-clamp-1">
+                        {unreadMsgCount === 0
+                          ? isTyping
+                            ? "Typing..."
+                            : data?.lastMessage?.message
+                          : `${
+                              unreadMsgCount > 4 ? "4+" : unreadMsgCount
+                            } messages`}
+                      </div>
 
-                      <div className={`m-2 p-0.5 w-1 h-1 rounded-full ${unreadMsgCount >= 1 ? "bg-blue-700" : "bg-zinc-400"}`}></div>
+                      <div
+                        className={`m-2 p-0.5 w-1 h-1 rounded-full ${
+                          unreadMsgCount >= 1 ? "bg-blue-700" : "bg-zinc-400"
+                        }`}
+                      ></div>
 
-                      <div>{formatDate(data?.lastMessageTime)}</div>
+                      <div className="w-[30%] line-clamp-1">{formatDate(data?.lastMessageTime)}</div>
                     </div>
                   </div>
                 </div>

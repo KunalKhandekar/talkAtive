@@ -2,6 +2,7 @@ const UserModel = require("../Models/userModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const errorHandler = require("../Utils/ErrorHandler");
+const { userSocketMap } = require("../Socket/Scoket");
 
 const Register = async (req, res, next) => {
   const { firstName, lastName, email, password, profilePic } = req.body;
@@ -25,7 +26,6 @@ const Register = async (req, res, next) => {
       email,
       password: hashedPassword,
       profilePic,
-      isLogin: true,
     });
 
     const token = jwt.sign(
@@ -74,14 +74,11 @@ const Login = async (req, res, next) => {
     return next(errorHandler(400, "Email or Password is incorrect"));
   }
 
-  if (user.isLogin) {
+  if (Object.keys(userSocketMap).includes(user?._id.toString())) {
     return next(
       errorHandler(400, "User is currently logged in from another device")
     );
   }
-
-  user.isLogin = true;
-  await user.save();
 
   const token = jwt.sign(
     { userId: user._id, email: user.email },
@@ -97,11 +94,11 @@ const Login = async (req, res, next) => {
     .json({
       message: "Login Successful",
       data: {
-        _id: user._id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        profilePic: user.profilePic,
+        _id: user?._id,
+        firstName: user?.firstName,
+        lastName: user?.lastName,
+        email: user?.email,
+        profilePic: user?.profilePic,
       },
       success: true,
     });
@@ -109,10 +106,6 @@ const Login = async (req, res, next) => {
 
 const Logout = async (req, res) => {
   try {
-    await UserModel.findOneAndUpdate(
-      { _id: req.body.userId },
-      { $set: { isLogin: false } }
-    );
     return res
       .clearCookie("token")
       .status(200)
