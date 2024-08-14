@@ -12,7 +12,7 @@ const Home = () => {
 
   return (
     <div className="flex items-center justify-center w-[100vw] h-[100vh] bg-slate-950">
-      <div className="m-auto h-[95vh] w-[95vw] sm:h-[calc(100vh-50px)] sm:w-[calc(100vw-50px)] rounded-lg overflow-hidden bg-slate-900 grid shadow-2xl md:grid-cols-[400px_1fr]">
+      <div className="m-auto h-[95vh] w-[95vw] sm:h-[calc(100vh-50px)] sm:w-[calc(100vw-50px)] rounded-lg overflow-hidden bg-slate-900 grid shadow-2xl md:grid-cols-[450px_1fr]">
         <Sidebar />
         <Conversation />
       </div>

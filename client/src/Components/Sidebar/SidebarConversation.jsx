@@ -63,8 +63,8 @@ const SidebarConversation = () => {
   }, [socket, setUsers, setTypingUser, removeTypingUser]);
 
   return (
-    <div className=" w-full h-full border-r border-slate-800">
-      <div className="p-3 border-b border-slate-800">
+    <div className="w-full h-full border-r border-slate-800">
+      <div className="p-3 border-t md:border-b md:border-t-0 border-slate-800">
         <h1 className="text-2xl font-semibold">Conversations</h1>
       </div>
 
@@ -72,7 +72,7 @@ const SidebarConversation = () => {
       {loading ? (
         <div className="loading loading-spinner"></div>
       ) : (
-        <div className="flex flex-col gap-1.5 w-full h-[calc(100vh-109px)] md:h-[calc(100vh-112px)] p-1.5 overflow-auto">
+        <div className="flex flex-col gap-1.5 w-full h-[calc(100vh-180px)] md:h-[calc(100vh-112px)] p-1.5 overflow-auto">
           {users?.map((data) => {
             const isSelectedUser =
               selectedConversation?._id === data?.user?._id;
@@ -82,7 +82,7 @@ const SidebarConversation = () => {
 
             return (
               <div
-                className={`sm:w-full rounded-md p-3 border ${
+                className={`w-full rounded-md p-3 border ${
                   isSelectedUser
                     ? "border-blue-600 bg-slate-800"
                     : "border-slate-800 hover:bg-slate-800"

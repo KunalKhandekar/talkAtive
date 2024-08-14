@@ -95,7 +95,7 @@ const Login = () => {
           <button
             type="submit"
             className={`w-full ${
-              loading ? "bg-transparent my-5" : "bg-blue-700"
+              loading ? "bg-blue-800 my-5" : "bg-blue-700"
             } text-white py-2 rounded shadow-sm hover:bg-blue-800 focus:outline-none focus:ring focus:ring-blue-300 relative`}
             disabled={loading} // Disable button when loading
           >

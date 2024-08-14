@@ -14,10 +14,10 @@ const Sidebar = () => {
   const { selectedConversation } = useConversation();
 
   return (
-    <div className={`w-full h-full grid grid-cols-[80px_1fr] ${selectedConversation !== null ? "hidden md:grid" : "grid"} transition-all`} >
+    <div className={`w-full h-full md:grid md:grid-cols-[80px_1fr] ${selectedConversation !== null ? "hidden md:grid" : "grid"} transition-all`} >
       <div className="border-r border-slate-800">
-        <div className="flex flex-col justify-between h-full w-full p-2 py-4 gap-2">
-          <div className="flex flex-col gap-2">
+        <div className="flex md:flex-col justify-between h-full w-full p-2 py-3 gap-2">
+          <div className="flex md:flex-col gap-2">
             {/* Chats */}
             <div
               className="w-16 h-16 rounded-full hover:bg-slate-800 flex items-center justify-center cursor-pointer"
@@ -36,9 +36,9 @@ const Sidebar = () => {
             </div>
           </div>
 
-          <div className="flex flex-col gap-3">
+          <div className="flex md:flex-col gap-3">
             {/* Profile */}
-            <div className="avatar m-1" title="Profile">
+            <div className="avatar m-1 w-14" title="Profile">
               <div className="ring-primary ring-offset-base-100 rounded-full ring ring-offset-2">
                 <img src={authUser?.profilePic} />
               </div>
