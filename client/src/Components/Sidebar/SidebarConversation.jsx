@@ -4,8 +4,9 @@ import useGetConversation from "../../Hooks/useGetConversation";
 import useConversation from "../../Zustand/useConversation";
 import moment from "moment";
 import { formatDate } from "../../Utils/dateFormater";
+import { RiUserSearchFill } from "react-icons/ri";
 
-const SidebarConversation = () => {
+const SidebarConversation = ({setOpenSerach}) => {
   const {
     selectedConversation,
     setSelectedConversation,
@@ -68,10 +69,25 @@ const SidebarConversation = () => {
         <h1 className="text-2xl font-semibold">Conversations</h1>
       </div>
 
+      {!loading && users.length === 0 && (
+        <div className="w-full h-[70%] flex items-center flex-col justify-center">
+          {/* Search */}
+          <div
+              className="w-16 h-16 rounded-full hover:bg-slate-800 flex items-center justify-center cursor-pointer"
+              title="Search"
+              onClick={() => setOpenSerach(true)}
+            >
+              <RiUserSearchFill size={30} />
+            </div>
+          <h1 className="text-xl font-semibold">No Conversation Found</h1>
+          <p className="text-sm font-semibold text-yellow-500">Start a new by clicking the above icon</p>
+        </div>
+      )}
+
       {/* Loaded Conversations */}
       {loading ? (
         <div className="loading loading-spinner"></div>
-      ) : (
+      ) : users.length !== 0 && (
         <div className="flex flex-col gap-1.5 w-full h-[calc(100vh-180px)] md:h-[calc(100vh-112px)] p-1.5 overflow-auto">
           {users?.map((data) => {
             const isSelectedUser =
@@ -101,7 +117,7 @@ const SidebarConversation = () => {
                       {data?.user?.firstName + " " + data?.user?.lastName}
                     </p>
                     <div
-                      className={`text-slate-400 flex items-center w-full justify-between  ${
+                      className={`text-slate-400 flex items-center w-full justify-between md:justify-start ${
                         unreadMsgCount >= 1 ? "font-semibold text-zinc-300" : ""
                       }`}
                     >
@@ -112,7 +128,7 @@ const SidebarConversation = () => {
                             : data?.lastMessage?.message
                           : `${
                               unreadMsgCount > 4 ? "4+" : unreadMsgCount
-                            } messages`}
+                            } new message${unreadMsgCount > 1 ? "s" :""}`}
                       </div>
 
                       <div

@@ -38,7 +38,7 @@ const Conversation = () => {
   }, [loading, messages, debouncedIsTyping]);  
 
   return (
-    <>
+    <div className="w-full h-[calc(100vh-180px)] md:h-[calc(100vh-30px)]">
       {selectedConversation ? (
         <div className="w-full h-full">
           <div className="h-20 flex items-center gap-3 p-2 px-6 border-b border-slate-800">
@@ -73,7 +73,7 @@ const Conversation = () => {
             </div>
           </div>
 
-          <div className="h-[calc(100vh-190px)] overflow-auto p-3">
+          <div className="h-[calc(100vh-175px)] overflow-auto p-3">
             {loading && (
               <div className="h-full w-full flex items-center justify-center">
                 <p className="loading loading-spinner"></p>
@@ -108,7 +108,7 @@ const Conversation = () => {
         </div>
       ) : (
         <div
-          className={`w-full h-full md:flex items-center justify-center hidden`}
+          className={`w-full h-[80%] md:flex items-center justify-center hidden`}
         >
           <div className="text-center">
             <img src={NoConvo} alt="NoConvo" className="w-[300px] h-auto " />
@@ -117,7 +117,7 @@ const Conversation = () => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

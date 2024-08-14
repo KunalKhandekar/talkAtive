@@ -41,16 +41,16 @@ const LogoutDialog = ({ onClose }) => {
           Are you sure you want to log out ?
         </h1>
 
-        <div className="flex justify-center gap-2 mt-8">
+        <div className="flex justify-center gap-2 mt-8 w-full">
           <button
-            type="submit"
-            className="px-3 py-2 rounded shadow-sm outline-none bg-slate-900 text-white"
+            className="px-3 py-2 rounded shadow-sm outline-none bg-slate-900 text-white w-full"
             onClick={() => onClose()}
           >
             Cancel
           </button>
           <button
-            className={`px-3 py-2 rounded shadow-sm outline-none bg-red-600 text-white`}
+            type="submit"
+            className={`px-3 py-2 rounded shadow-sm outline-none bg-red-600 text-white w-full`}
             onClick={() => handleLogout()}
           >
             Logout
