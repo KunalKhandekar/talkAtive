@@ -36,6 +36,8 @@ const Register = async (req, res, next) => {
     return res
       .cookie("token", token, {
         httpOnly: true,
+        secure: process.env.NODE_ENV === "production", // Use Secure flag only in production
+        sameSite: "None", // Ensure the cookie is sent in cross-site requests
         expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000 * 10), // 10 Years
       })
       .status(201)
@@ -88,6 +90,8 @@ const Login = async (req, res, next) => {
   return res
     .cookie("token", token, {
       httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // Use Secure flag only in production
+      sameSite: "None", // Ensure the cookie is sent in cross-site requests
       expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000 * 10), // 10 Years
     })
     .status(200)
