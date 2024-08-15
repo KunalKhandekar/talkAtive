@@ -48,9 +48,10 @@ const UpdateDialog = ({ onClose }) => {
       let updatedFormData = formData;
       if (avatar?.file) {
         const UploadProfilePic = await uploadFile(avatar?.file);
+        console.log(UploadProfilePic);
         updatedFormData = {
           ...formData,
-          profilePic: UploadProfilePic?.url,
+          profilePic: UploadProfilePic?.secure_url,
         };
       }
       const url = `${import.meta.env.VITE_BACKEND_URL}/api/user/updateDetails`;

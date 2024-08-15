@@ -5,7 +5,7 @@ const useRegister = async (formData, avatar) => {
   const UploadProfilePic = await uploadFile(avatar);
   const updatedFormData = {
     ...formData,
-    profilePic: UploadProfilePic?.url,
+    profilePic: UploadProfilePic?.secure_url,
   };
 
   const url = `${import.meta.env.VITE_BACKEND_URL}/api/auth/register`;
