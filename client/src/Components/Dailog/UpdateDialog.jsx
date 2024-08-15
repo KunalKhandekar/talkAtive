@@ -90,7 +90,6 @@ const UpdateDialog = ({ onClose }) => {
   return (
     <div
       className="fixed top-0 bottom-0 left-0 right-0 bg-slate-950 bg-opacity-60 flex justify-center items-center z-20"
-      onClick={() => onClose()}
     >
       <div
         className="w-[340px] bg-slate-800 rounded-xl p-5 mx-auto"
@@ -165,6 +164,7 @@ const UpdateDialog = ({ onClose }) => {
             <button
               className="px-3 py-2 rounded shadow-sm outline-none bg-slate-900 text-white w-full"
               onClick={() => onClose()}
+              type="button"
             >
               Cancel
             </button>

@@ -11,6 +11,7 @@ import Typing from "./Typing";
 import useDebounce from "../../Hooks/useDebouncing";
 import { useAuthContext } from "../../Context/AuthContext";
 import { markMessagesAsSeen } from "../../Hooks/useSeenMessage";
+import { processMessagesWithTimeline } from "../../Utils/addTimeLabel";
 
 const Conversation = () => {
   const { selectedConversation, setSelectedConversation, typingUsers } =
@@ -35,10 +36,13 @@ const Conversation = () => {
     if (!loading && (messages.length > 0 || debouncedIsTyping !== undefined)) {
       scrollToBottom();
     }
-  }, [loading, messages, debouncedIsTyping]);  
+  }, [loading, messages, debouncedIsTyping]);
+
+
+  const formattedMessages = processMessagesWithTimeline(messages);
 
   return (
-    <div className="w-full h-[calc(100vh-180px)] md:h-[calc(100vh-30px)]">
+    <div className={`w-full h-[calc(100vh-180px)] md:h-[calc(100vh-30px)] ${!selectedConversation ? "hidden md:block" : ""} transition-all duration-75`}>
       {selectedConversation ? (
         <div className="w-full h-full">
           <div className="h-20 flex items-center gap-3 p-2 px-6 border-b border-slate-800">
@@ -79,9 +83,9 @@ const Conversation = () => {
                 <p className="loading loading-spinner"></p>
               </div>
             )}
-            {!loading && messages.length > 0 && (
+            {!loading && formattedMessages.length > 0 && (
               <>
-                {messages.map((message) => (
+                {formattedMessages.map((message) => (
                   <Message message={message} key={message._id} />
                 ))}
                 {debouncedIsTyping && <Typing />}
@@ -89,7 +93,7 @@ const Conversation = () => {
               </>
             )}
 
-            {!loading && messages.length === 0 && (
+            {!loading && formattedMessages.length === 0 && (
               <div className="h-full w-full flex items-start justify-center">
                 <p className="text-slate-400 font-semibold text-center p-2 border border-slate-500 rounded-lg bg-slate-800">
                   Start a conversation with{" "}
