@@ -16,7 +16,7 @@ const SearchDialog = ({ onClose }) => {
   const searchUsersHandler = async () => {
     setLoading(true);
     try {
-      const url = `https://talk-ative.vercel.app/api/user/search-users`;
+      const url = `https://talkative-2ld0.onrender.com/api/user/search-users`;
       const response = await axios.post(
         url,
         { search: search },
