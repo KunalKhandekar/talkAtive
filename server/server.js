@@ -24,6 +24,13 @@ app.use("/api/auth", require("./Routes/authRoutes.js"));
 app.use("/api/chat", require("./Routes/chatRoutes.js"));
 app.use("/api/user", require("./Routes/userRoutes.js"));
 
+app.get('/', (req, res) => {
+  return res.json({
+    success: true,
+    message: "Server is Running",
+  })
+});
+
 // Middle Ware for Error Handler.
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
