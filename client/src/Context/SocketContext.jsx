@@ -16,7 +16,8 @@ export const SocketContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (authUser) {
-      const newSocket = io(import.meta.env.VITE_BACKEND_URL, {
+      const newSocket = io("http://localhost:8000", {
+        withCredentials: true,
         query: { userId: authUser?._id },
       });
       setSocket(newSocket);

@@ -54,7 +54,7 @@ const UpdateDialog = ({ onClose }) => {
           profilePic: UploadProfilePic?.secure_url,
         };
       }
-      const url = `${import.meta.env.VITE_BACKEND_URL}/api/user/updateDetails`;
+      const url = `http://localhost:8000/api/user/updateDetails`;
       const response = await axios.post(
         url,
         {

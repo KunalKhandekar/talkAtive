@@ -7,7 +7,7 @@ const useSendMessage = () => {
 
   const sendMessage = async (message) => {
     setLoading(true);
-    const url = `${import.meta.env.VITE_BACKEND_URL}/api/chat/send/${
+    const url = `http://localhost:8000/api/chat/send/${
       selectedConversation?._id
     }`;
 

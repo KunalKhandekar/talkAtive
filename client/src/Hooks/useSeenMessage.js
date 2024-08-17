@@ -1,5 +1,5 @@
 export const markMessagesAsSeen = async (receiverId, senderId) => {
-    const url = `${import.meta.env.VITE_BACKEND_URL}/api/chat/mark-as-seen`;
+    const url = `http://localhost:8000/api/chat/mark-as-seen`;
     try {
       await fetch(url, {
         method: "POST",

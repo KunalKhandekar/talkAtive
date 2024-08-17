@@ -16,7 +16,7 @@ const SearchDialog = ({ onClose }) => {
   const searchUsersHandler = async () => {
     setLoading(true);
     try {
-      const url = `${import.meta.env.VITE_BACKEND_URL}/api/user/search-users`;
+      const url = `http://localhost:8000/api/user/search-users`;
       const response = await axios.post(
         url,
         { search: search },

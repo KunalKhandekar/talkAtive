@@ -17,11 +17,11 @@ const Sidebar = () => {
 
   return (
     <div
-      className={`w-full h-[calc(100vh-180px)] md:h-[calc(100vh-30px)] md:grid md:grid-cols-[80px_1fr] ${
+      className={`w-full h-full md:h-[calc(100vh-30px)] md:grid md:grid-cols-[80px_1fr] ${
         selectedConversation !== null ? "hidden md:grid" : "grid"
       } transition-all`}
     >
-      <div className="border-r border-slate-800">
+      <div className="border-r border-slate-800 md:h-auto">
         <div className="flex md:flex-col justify-between md:items-stretch w-full h-full p-2 py-3 gap-2">
           <div className="flex md:flex-col gap-2">
             {/* Chats */}

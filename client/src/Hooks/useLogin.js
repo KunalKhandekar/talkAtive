@@ -1,5 +1,5 @@
 const useLogin = async (formData) => {
-  const url = `${import.meta.env.VITE_BACKEND_URL}/api/auth/login`;
+  const url = `http://localhost:8000/api/auth/login`;
 
   const response = await fetch(url, {
     method: "POST",

@@ -8,7 +8,7 @@ const useRegister = async (formData, avatar) => {
     profilePic: UploadProfilePic?.secure_url,
   };
 
-  const url = `${import.meta.env.VITE_BACKEND_URL}/api/auth/register`;
+  const url = `http://localhost:8000/api/auth/register`;
 
   const response = await fetch(url, {
     method: "POST",

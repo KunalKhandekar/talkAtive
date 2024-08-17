@@ -8,7 +8,7 @@ const useGetMessage = () => {
   useEffect(() => {
     const getMessage = async () => {
       setLoading(true);
-      const url = `${import.meta.env.VITE_BACKEND_URL}/api/chat/${
+      const url = `http://localhost:8000/api/chat/${
         selectedConversation?._id
       }`;
 

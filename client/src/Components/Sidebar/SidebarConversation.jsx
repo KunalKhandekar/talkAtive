@@ -64,7 +64,7 @@ const SidebarConversation = ({setOpenSerach}) => {
   }, [socket, setUsers, setTypingUser, removeTypingUser]);
 
   return (
-    <div className="w-full h-full border-r border-slate-800">
+    <div className="w-full h-[calc(100vh-90px)] md:h-full border-r border-slate-800">
       <div className="p-3 border-t md:border-b md:border-t-0 border-slate-800">
         <h1 className="text-2xl font-semibold">Conversations</h1>
       </div>

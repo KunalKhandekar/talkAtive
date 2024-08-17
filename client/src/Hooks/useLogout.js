@@ -1,5 +1,5 @@
 const useLogout = async (userId) => {
-  const url = `${import.meta.env.VITE_BACKEND_URL}/api/auth/logout`;
+  const url = `http://localhost:8000/api/auth/logout`;
 
   const response = await fetch(url, {
     method: "POST",

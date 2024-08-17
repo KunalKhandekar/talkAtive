@@ -9,7 +9,7 @@ const useGetConversation = () => {
 
   const getConversation = async () => {
     setLoading(true);
-    const url = `${import.meta.env.VITE_BACKEND_URL}/api/user/conversation`;
+    const url = `http://localhost:8000/api/user/conversation`;
     const response = await fetch(url, {
       method: "GET",
       headers: {
