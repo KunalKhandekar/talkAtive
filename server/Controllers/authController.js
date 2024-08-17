@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const errorHandler = require("../Utils/ErrorHandler");
 const { userSocketMap } = require("../Socket/Scoket");
 
+// Register Controller
 const Register = async (req, res, next) => {
   const { firstName, lastName, email, password, profilePic } = req.body;
 
@@ -11,14 +12,14 @@ const Register = async (req, res, next) => {
     return next(errorHandler(400, "All fields are required"));
   }
 
-  const userExist = await UserModel.findOne({ email });
-
-  if (userExist) {
-    return next(errorHandler(400, "User already exists"));
-  }
-
   try {
-    const hashedPassword = await bcrypt.hash(password, 16);
+    const userExist = await UserModel.findOne({ email });
+
+    if (userExist) {
+      return next(errorHandler(400, "User already exists"));
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10); // Reduced salt rounds for performance
 
     const newUser = await UserModel.create({
       firstName,
@@ -30,15 +31,16 @@ const Register = async (req, res, next) => {
 
     const token = jwt.sign(
       { userId: newUser._id, email: newUser.email },
-      process.env.JWT_SECRET
+      process.env.JWT_SECRET,
+      { expiresIn: '10y' } // JWT expiration
     );
 
     return res
       .cookie("token", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production", // Use Secure flag only in production
-        sameSite: "None", // Ensure the cookie is sent in cross-site requests
-        expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000 * 10), // 10 Years
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "None",
+        expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000 * 10),
       })
       .status(201)
       .json({
@@ -53,10 +55,12 @@ const Register = async (req, res, next) => {
         success: true,
       });
   } catch (error) {
+    console.error("Registration Error:", error); // Detailed logging
     return next(errorHandler(500, "Internal Server Error"));
   }
 };
 
+// Login Controller
 const Login = async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -64,50 +68,55 @@ const Login = async (req, res, next) => {
     return next(errorHandler(400, "All fields are required"));
   }
 
-  const user = await UserModel.findOne({ email });
+  try {
+    const user = await UserModel.findOne({ email });
 
-  if (!user) {
-    return next(errorHandler(400, "Email or Password is incorrect"));
-  }
+    if (!user) {
+      return next(errorHandler(400, "Email or Password is incorrect"));
+    }
 
-  const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, user.password);
 
-  if (!isMatch) {
-    return next(errorHandler(400, "Email or Password is incorrect"));
-  }
+    if (!isMatch) {
+      return next(errorHandler(400, "Email or Password is incorrect"));
+    }
 
-  if (Object.keys(userSocketMap).includes(user?._id.toString())) {
-    return next(
-      errorHandler(400, "User is currently logged in from another device")
+    if (userSocketMap[user._id.toString()]) {
+      return next(errorHandler(400, "User is currently logged in from another device"));
+    }
+
+    const token = jwt.sign(
+      { userId: user._id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: '10y' }
     );
+
+    return res
+      .cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "None",
+        expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000 * 10),
+      })
+      .status(200)
+      .json({
+        message: "Login Successful",
+        data: {
+          _id: user._id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          profilePic: user.profilePic,
+        },
+        success: true,
+      });
+  } catch (error) {
+    console.error("Login Error:", error); // Detailed logging
+    return next(errorHandler(500, "Internal Server Error"));
   }
-
-  const token = jwt.sign(
-    { userId: user._id, email: user.email },
-    process.env.JWT_SECRET
-  );
-
-  return res
-    .cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // Use Secure flag only in production
-      sameSite: "None", // Ensure the cookie is sent in cross-site requests
-      expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000 * 10), // 10 Years
-    })
-    .status(200)
-    .json({
-      message: "Login Successful",
-      data: {
-        _id: user?._id,
-        firstName: user?.firstName,
-        lastName: user?.lastName,
-        email: user?.email,
-        profilePic: user?.profilePic,
-      },
-      success: true,
-    });
 };
 
+// Logout Controller
 const Logout = async (req, res) => {
   try {
     return res
@@ -115,7 +124,7 @@ const Logout = async (req, res) => {
       .status(200)
       .json({ message: "Logout Successful", success: true });
   } catch (error) {
-    console.error("Logout Error:", error);
+    console.error("Logout Error:", error); // Detailed logging
     return res.status(500).json({ message: "Logout Failed", success: false });
   }
 };
