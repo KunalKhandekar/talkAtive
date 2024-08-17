@@ -8,7 +8,7 @@ const useGetMessage = () => {
   useEffect(() => {
     const getMessage = async () => {
       setLoading(true);
-      const url = `http://localhost:8000/api/chat/${
+      const url = `https://talkative-2ld0.onrender.com/api/chat/${
         selectedConversation?._id
       }`;
 

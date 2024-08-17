@@ -54,7 +54,7 @@ const UpdateDialog = ({ onClose }) => {
           profilePic: UploadProfilePic?.secure_url,
         };
       }
-      const url = `http://localhost:8000/api/user/updateDetails`;
+      const url = `https://talkative-2ld0.onrender.com/api/user/updateDetails`;
       const response = await axios.post(
         url,
         {

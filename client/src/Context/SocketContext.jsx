@@ -16,7 +16,7 @@ export const SocketContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (authUser) {
-      const newSocket = io("http://localhost:8000", {
+      const newSocket = io("https://talkative-2ld0.onrender.com", {
         withCredentials: true,
         query: { userId: authUser?._id },
       });

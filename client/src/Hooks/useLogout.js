@@ -1,5 +1,5 @@
 const useLogout = async (userId) => {
-  const url = `http://localhost:8000/api/auth/logout`;
+  const url = `https://talkative-2ld0.onrender.com/api/auth/logout`;
 
   const response = await fetch(url, {
     method: "POST",

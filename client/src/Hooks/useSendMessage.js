@@ -7,7 +7,7 @@ const useSendMessage = () => {
 
   const sendMessage = async (message) => {
     setLoading(true);
-    const url = `http://localhost:8000/api/chat/send/${
+    const url = `https://talkative-2ld0.onrender.com/api/chat/send/${
       selectedConversation?._id
     }`;
 
