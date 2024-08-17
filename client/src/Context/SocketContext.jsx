@@ -16,7 +16,7 @@ export const SocketContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (authUser) {
-      const newSocket = io("https://talkative-2ld0.onrender.com", {
+      const newSocket = io("https://talk-ative.vercel.app", {
         withCredentials: true,
         query: { userId: authUser?._id },
       });

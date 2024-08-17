@@ -7,7 +7,7 @@ const useSendMessage = () => {
 
   const sendMessage = async (message) => {
     setLoading(true);
-    const url = `https://talkative-2ld0.onrender.com/api/chat/send/${
+    const url = `https://talk-ative.vercel.app/api/chat/send/${
       selectedConversation?._id
     }`;
 

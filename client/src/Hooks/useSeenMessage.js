@@ -1,5 +1,5 @@
 export const markMessagesAsSeen = async (receiverId, senderId) => {
-    const url = `https://talkative-2ld0.onrender.com/api/chat/mark-as-seen`;
+    const url = `https://talk-ative.vercel.app/api/chat/mark-as-seen`;
     try {
       await fetch(url, {
         method: "POST",
