@@ -19,17 +19,17 @@ const getConversationForSideBar = async (userId) => {
       // Calculate unread message count
       const unreadMessageCount = await MessageModel.countDocuments({
         receiverId: userId,
-        senderId: user._id,
+        senderId: user?._id,
         seen: { $ne: userId },
       });
 
       return {
         _id: convo._id,
         user: {
-          _id: user._id,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          profilePic: user.profilePic,
+          _id: user?._id,
+          firstName: user?.firstName,
+          lastName: user?.lastName,
+          profilePic: user?.profilePic,
         },
         lastMessage: {
           message: convo.messages[convo.messages.length - 1].message,
