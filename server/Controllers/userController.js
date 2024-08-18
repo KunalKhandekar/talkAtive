@@ -34,7 +34,6 @@ const getUserForSearch = async (req, res, next) => {
 
 const updateUserDetails = async (req, res, next) => {
   const { firstName, lastName, email, profilePic } = req.body;
-  console.log("ProfilePic", profilePic);
   try {
     const user = await UserModel.findOne({email});
     user.email = email;

@@ -5,7 +5,7 @@ const { getConversationForSideBar } = require("../Utils/getUserForSideBar");
 
 const sendMessage = async (req, res, next) => {
   try {
-    const { message } = req.body;
+    const { message, imageURL, videoURL } = req.body;
     const { id: receiverId } = req.params;
     const senderId = req.user.userId;
 
@@ -23,6 +23,8 @@ const sendMessage = async (req, res, next) => {
       senderId,
       receiverId,
       message,
+      imageURL,
+      videoURL,
     });
 
     if (newMessage) {

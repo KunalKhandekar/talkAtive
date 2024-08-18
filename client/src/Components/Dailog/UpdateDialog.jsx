@@ -48,7 +48,6 @@ const UpdateDialog = ({ onClose }) => {
       let updatedFormData = formData;
       if (avatar?.file) {
         const UploadProfilePic = await uploadFile(avatar?.file);
-        console.log(UploadProfilePic);
         updatedFormData = {
           ...formData,
           profilePic: UploadProfilePic?.secure_url,
@@ -79,7 +78,6 @@ const UpdateDialog = ({ onClose }) => {
         onClose();
       } else {
         toast.error(response?.data?.message);
-        console.log(response);
         setLoading(false);
       }
     } catch (error) {

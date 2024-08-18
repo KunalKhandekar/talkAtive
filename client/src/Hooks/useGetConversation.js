@@ -26,7 +26,6 @@ const useGetConversation = () => {
         localStorage.removeItem("user");
         navigate("/login");
       }
-      console.log(data);
       toast.error(data.message);
     }
     setLoading(false);

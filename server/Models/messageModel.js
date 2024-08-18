@@ -12,9 +12,14 @@ const messageScheme = new mongoose.Schema(
     },
     message: {
       type: String,
-      required: true,
     },
-    seen: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    seen: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    imageURL: {
+      type: String,
+    },
+    videoURL: {
+      type: String,
+    },
   },
   { timestamps: true }
 );

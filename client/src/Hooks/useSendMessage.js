@@ -5,7 +5,7 @@ const useSendMessage = () => {
   const [loading, setLoading] = useState(false);
   const { messages, setMessages, selectedConversation } = useConversation();
 
-  const sendMessage = async (message) => {
+  const sendMessage = async (messageOBJ) => {
     setLoading(true);
     const url = `https://talkative-2ld0.onrender.com/api/chat/send/${
       selectedConversation?._id
@@ -16,7 +16,7 @@ const useSendMessage = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ message }),
+      body: JSON.stringify(messageOBJ),
       credentials: "include",
     });
 

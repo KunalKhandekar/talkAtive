@@ -32,7 +32,7 @@ const getConversationForSideBar = async (userId) => {
           profilePic: user?.profilePic,
         },
         lastMessage: {
-          message: convo.messages[convo.messages.length - 1].message,
+          message: convo.messages[convo.messages.length - 1],
         },
         lastMessageTime: convo.updatedAt,
         unreadMessageCount,

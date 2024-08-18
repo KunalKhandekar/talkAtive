@@ -6,12 +6,14 @@ import useGetMessage from "../../Hooks/useGetMessage";
 import Message from "./Message";
 import { useSocketContext } from "../../Context/SocketContext";
 import useListenMessage from "../../Hooks/useListenMessage";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Typing from "./Typing";
 import useDebounce from "../../Hooks/useDebouncing";
 import { useAuthContext } from "../../Context/AuthContext";
 import { markMessagesAsSeen } from "../../Hooks/useSeenMessage";
 import { processMessagesWithTimeline } from "../../Utils/addTimeLabel";
+import { FaCross } from "react-icons/fa";
+import { IoClose } from "react-icons/io5";
 
 const Conversation = () => {
   const { selectedConversation, setSelectedConversation, typingUsers } =
@@ -19,6 +21,12 @@ const Conversation = () => {
   const { authUser } = useAuthContext();
   const { messages, loading } = useGetMessage();
   const { onlineUsers, socket } = useSocketContext();
+  const [mediaLoading, setMediaLoading] = useState(false);
+  const [inputMessage, setInputMessage] = useState({
+    message: "",
+    imageURL: "",
+    videoURL: "",
+  });
   const messagesEndRef = useRef(null);
   const isOnline = onlineUsers.includes(selectedConversation?._id);
   const isTyping = typingUsers[selectedConversation?._id];
@@ -36,13 +44,16 @@ const Conversation = () => {
     if (!loading && (messages.length > 0 || debouncedIsTyping !== undefined)) {
       scrollToBottom();
     }
-  }, [loading, messages, debouncedIsTyping]);
-
+  }, [loading, messages, debouncedIsTyping, inputMessage.imageURL, inputMessage.videoURL]);
 
   const formattedMessages = processMessagesWithTimeline(messages);
 
   return (
-    <div className={`w-full h-[calc(100vh-180px)] md:h-[calc(100vh-30px)] ${!selectedConversation ? "hidden md:block" : ""} transition-all duration-75`}>
+    <div
+      className={`w-full h-[calc(100vh-180px)] md:h-[calc(100vh-30px)] ${
+        !selectedConversation ? "hidden md:block" : ""
+      } transition-all duration-75`}
+    >
       {selectedConversation ? (
         <div className="w-full h-full">
           <div className="h-20 flex items-center gap-3 p-2 px-6 border-b border-slate-800">
@@ -77,37 +88,75 @@ const Conversation = () => {
             </div>
           </div>
 
-          <div className="h-[calc(100vh-175px)] overflow-auto p-3">
-            {loading && (
-              <div className="h-full w-full flex items-center justify-center">
-                <p className="loading loading-spinner"></p>
+          {mediaLoading ||
+          inputMessage.imageURL != "" ||
+          inputMessage.videoURL != "" ? (
+            <div className="h-[calc(100vh-175px)] overflow-auto p-0 relative">
+            <div className="absolute h-full w-full p-5 flex items-center justify-center bg-slate-950 bg-opacity-50">
+              <div className="absolute top-0 text-xl right-0 m-2 p-2 cursor-pointer bg-red-500 font-bold text-white rounded-full" onClick={() => setInputMessage({
+                ...inputMessage,
+                imageURL: "",
+                videoURL: "",
+              })}>
+                <IoClose />
               </div>
-            )}
-            {!loading && formattedMessages.length > 0 && (
-              <>
-                {formattedMessages.map((message) => (
-                  <Message message={message} key={message._id} />
-                ))}
-                {debouncedIsTyping && <Typing />}
-                <div ref={messagesEndRef} />
-              </>
-            )}
+              {inputMessage.imageURL == "" ? (
+                inputMessage.videoURL == "" ? (
+                  <p className="loading loading-spinner"></p>
+                ) : (
+                  <video
+                    src={inputMessage.videoURL}
+                    controls
+                    className="w-full h-full"
+                  ></video>
+                )
+              ) : (
+                <img
+                  src={inputMessage.imageURL}
+                  alt="image"
+                  className="w-full h-full"
+                />
+              )}
+            </div>
+            </div>
+          ) : (
+            <div className="h-[calc(100vh-175px)] overflow-auto p-0 relative">
+              {loading && (
+                <div className="h-full w-full flex items-center justify-center">
+                  <p className="loading loading-spinner"></p>
+                </div>
+              )}
+              {!loading && formattedMessages.length > 0 && (
+                <>
+                  {formattedMessages.map((message) => (
+                    <Message message={message} key={message._id} />
+                  ))}
+                  {debouncedIsTyping && <Typing />}
+                  <div ref={messagesEndRef} />
+                </>
+              )}
 
-            {!loading && formattedMessages.length === 0 && (
-              <div className="h-full w-full flex items-start justify-center">
-                <p className="text-slate-400 font-semibold text-center p-2 border border-slate-500 rounded-lg bg-slate-800">
-                  Start a conversation with{" "}
-                  <span className="text-blue-600">
-                    {selectedConversation?.firstName}
-                  </span>{" "}
-                  by sending a message.
-                </p>
-              </div>
-            )}
-          </div>
+              {!loading && formattedMessages.length === 0 && (
+                <div className="h-full w-full flex items-start justify-center">
+                  <p className="text-slate-400 font-semibold text-center p-2 border border-slate-500 rounded-lg bg-slate-800">
+                    Start a conversation with{" "}
+                    <span className="text-blue-600">
+                      {selectedConversation?.firstName}
+                    </span>{" "}
+                    by sending a message.
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
 
           <div className="h-16 border-t border-slate-800">
-            <MessageInput toUserId={selectedConversation?._id} />
+            <MessageInput
+              toUserId={selectedConversation?._id}
+              setMediaLoading={setMediaLoading}
+              inputMessage={inputMessage}
+              setInputMessage={setInputMessage}
+            />
           </div>
         </div>
       ) : (

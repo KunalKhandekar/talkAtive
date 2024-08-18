@@ -28,11 +28,13 @@ const Message = ({ message }) => {
           </div>
         </div>
         <div
-          className={`chat-bubble ${
+          className={`chat-bubble ${(message.imageURL || message.videoURL) ? "p-1" : ""} ${
             Sender ? "bg-blue-700 text-white" : "text-white bg-slate-800"
           }`}
         >
-          <p>{message?.message}</p>
+          {message?.imageURL && <img src={message?.imageURL} alt={message?.message} className="h-64 w-auto rounded-xl" />}
+          {message?.videoURL && <video controls src={message?.videoURL} alt={message?.message} className="aspect-video w-auto rounded-xl" />}
+          {message.message && <p className={`${(message.imageURL || message.videoURL) ? "p-2" : ""}`}>{message?.message}</p>}
         </div>
 
         <div className="chat-footer opacity-50 flex items-center gap-1 justify-center">

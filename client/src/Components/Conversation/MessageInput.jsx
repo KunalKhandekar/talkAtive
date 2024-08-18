@@ -1,78 +1,158 @@
 import { RiAttachment2 } from "react-icons/ri";
-import { LuSend } from "react-icons/lu";
+import { LuImage, LuSend, LuVideo } from "react-icons/lu";
+import { FaRegImages } from "react-icons/fa";
+import { IoIosVideocam } from "react-icons/io";
 import useSendMessage from "../../Hooks/useSendMessage";
-import { useState, useEffect } from "react";
-import useConversation from "../../Zustand/useConversation";
+import { useState, useRef } from "react";
 import { useSocketContext } from "../../Context/SocketContext";
+import { uploadFile } from "../../Utils/uploadFile";
+import toast from "react-hot-toast";
 
-const MessageInput = ({ toUserId }) => {
+const MessageInput = ({ toUserId, setMediaLoading, inputMessage, setInputMessage }) => {
   const { socket } = useSocketContext();
   const { sendMessage, loading } = useSendMessage();
-  const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
-  let typingTimeout;
+  const typingTimeoutRef = useRef(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const handleImage = async (e) => {
+    const file = e.target.files[0];
+    setIsDropdownOpen(false);
+    setMediaLoading(true);
+    const UploadImage = await uploadFile(file);
+    setInputMessage((prevState) => ({
+      ...prevState,
+      imageURL: UploadImage?.secure_url || "",
+    }));
+    setMediaLoading(false);
+  };
+
+  const handleVideo = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const fileSizeMB = file.size / (1024 * 1024);
+      if (fileSizeMB > 100) {
+        toast.error("File size exceeds 100 MB. Please select a smaller file.");
+        setIsDropdownOpen(false);
+      } else {
+        try {
+          setIsDropdownOpen(false);
+          setMediaLoading(true);
+          const UploadVideo = await uploadFile(file);
+          setInputMessage((prevState) => ({
+            ...prevState,
+            videoURL: UploadVideo?.secure_url || "",
+          }));
+          setMediaLoading(false);
+        } catch (error) {
+          toast.error(error?.message);
+          setIsDropdownOpen(false);
+          setMediaLoading(false);
+        }
+      }
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const validInput = input.trim();
-
-    if (validInput === "") {
-      setInput("");
-      return;
-    }
-
-    if (input) {
-      sendMessage(input);
-      setInput("");
-      clearTimeout(typingTimeout);
+    if (inputMessage?.message || inputMessage?.imageURL || inputMessage?.videoURL) {
+      sendMessage(inputMessage);
+      setInputMessage({
+        message: "",
+        imageURL: "",
+        videoURL: "",
+      });
+      clearTimeout(typingTimeoutRef.current);
       setIsTyping(false);
       socket.emit("stopTyping", { toUserId }); // Ensure typing status stops
     }
   };
 
   const handleInputChange = (e) => {
-    setInput(e.target.value);
+    setInputMessage({
+      ...inputMessage,
+      message: e.target.value,
+    });
 
     if (!isTyping) {
       setIsTyping(true);
       socket.emit("typing", { toUserId });
     }
 
-    clearTimeout(typingTimeout);
-    typingTimeout = setTimeout(() => {
+    clearTimeout(typingTimeoutRef.current);
+    typingTimeoutRef.current = setTimeout(() => {
       setIsTyping(false);
       socket.emit("stopTyping", { toUserId });
     }, 2000);
   };
 
-  useEffect(() => {
-    return () => {
-      // Cleanup on unmount
-      clearTimeout(typingTimeout);
-      if (isTyping) {
-        socket.emit("stopTyping", { toUserId });
-      }
-    };
-  }, [toUserId, isTyping, socket]);
-
   return (
     <div className="h-full w-full flex items-center p-2 gap-3">
-      <div className="p-2 bg-slate-800 rounded-full shadow-md">
-        <RiAttachment2 size={24} />
+      <div className="dropdown dropdown-hover dropdown-top dropdown-start">
+        <div
+          tabIndex={0}
+          role="button"
+          className="btn m-1 bg-slate-900 hover:bg-slate-800 rounded-full"
+          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+        >
+          <RiAttachment2 size={25} />
+        </div>
+        {isDropdownOpen && (
+          <ul
+            tabIndex={0}
+            className="dropdown-content menu rounded-box z-[1] w-auto p-2 shadow bg-slate-800"
+          >
+            <form>
+              <li>
+                <label htmlFor="image">
+                  <div
+                    className="px-4 py-2 text-white flex items-center gap-3"
+                    htmlFor="image"
+                  >
+                    <FaRegImages size={20} />
+                    Image
+                  </div>
+                </label>
+                <input
+                  type="file"
+                  id="image"
+                  accept="image/*"
+                  onChange={(e) => handleImage(e)}
+                  className="hidden"
+                />
+              </li>
+              <li>
+                <label htmlFor="video">
+                  <div className="px-4 py-2 text-white flex items-center gap-3">
+                    <IoIosVideocam size={20} />
+                    Video
+                  </div>
+                </label>
+                <input
+                  type="file"
+                  id="video"
+                  accept="video/*"
+                  onChange={(e) => handleVideo(e)}
+                  className="hidden"
+                />
+              </li>
+            </form>
+          </ul>
+        )}
       </div>
       <form className="w-full flex items-center gap-3" onSubmit={handleSubmit}>
         <input
           type="text"
           placeholder="Type here"
-          value={input}
+          value={inputMessage.message}
           onChange={handleInputChange}
           className="input input-ghost w-full bg-slate-950 outline-none"
         />
         <button
           type="submit"
           className="btn hover:bg-blue-800 bg-blue-700 text-white"
-          disabled={loading || !input}
+          disabled={loading || !(inputMessage?.message || inputMessage?.imageURL || inputMessage?.videoURL)}
         >
           {loading ? (
             <div className="loading loading-spinner"></div>
