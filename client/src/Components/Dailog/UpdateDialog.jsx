@@ -6,6 +6,7 @@ import { useFileHandler } from "6pp";
 import { uploadFile } from "../../Utils/uploadFile";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { backendUrl } from "../../Utils/constants";
 
 const UpdateDialog = ({ onClose }) => {
   const navigate = useNavigate();
@@ -53,7 +54,7 @@ const UpdateDialog = ({ onClose }) => {
           profilePic: UploadProfilePic?.secure_url,
         };
       }
-      const url = `https://talkative-2ld0.onrender.com/api/user/updateDetails`;
+      const url = `${backendUrl}/api/user/updateDetails`;
       const response = await axios.post(
         url,
         {

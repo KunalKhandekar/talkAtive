@@ -4,6 +4,7 @@ import { useAuthContext } from "../../Context/AuthContext";
 import axios from "axios";
 import useConversation from "../../Zustand/useConversation";
 import { useSocketContext } from "../../Context/SocketContext";
+import { backendUrl } from "../../Utils/constants";
 
 const SearchDialog = ({ onClose }) => {
   const { authUser } = useAuthContext();
@@ -16,7 +17,7 @@ const SearchDialog = ({ onClose }) => {
   const searchUsersHandler = async () => {
     setLoading(true);
     try {
-      const url = `https://talkative-2ld0.onrender.com/api/user/search-users`;
+      const url = `${backendUrl}/api/user/search-users`;
       const response = await axios.post(
         url,
         { search: search },

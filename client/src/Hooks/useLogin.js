@@ -1,5 +1,7 @@
+import { backendUrl } from "../Utils/constants";
+
 const useLogin = async (formData) => {
-  const url = `https://talkative-2ld0.onrender.com/api/auth/login`;
+  const url = `${backendUrl}/api/auth/login`;
 
   const response = await fetch(url, {
     method: "POST",

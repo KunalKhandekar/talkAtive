@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { backendUrl } from "../Utils/constants";
 
 const useGetConversation = () => {
   const [loading, setLoading] = useState(false);
@@ -9,7 +10,7 @@ const useGetConversation = () => {
 
   const getConversation = async () => {
     setLoading(true);
-    const url = `https://talkative-2ld0.onrender.com/api/user/conversation`;
+    const url = `${backendUrl}/api/user/conversation`;
     const response = await fetch(url, {
       method: "GET",
       headers: {

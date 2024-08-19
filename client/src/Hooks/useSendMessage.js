@@ -1,5 +1,6 @@
 import { useState } from "react";
 import useConversation from "../Zustand/useConversation";
+import { backendUrl } from "../Utils/constants";
 
 const useSendMessage = () => {
   const [loading, setLoading] = useState(false);
@@ -7,7 +8,7 @@ const useSendMessage = () => {
 
   const sendMessage = async (messageOBJ) => {
     setLoading(true);
-    const url = `https://talkative-2ld0.onrender.com/api/chat/send/${
+    const url = `${backendUrl}/api/chat/send/${
       selectedConversation?._id
     }`;
 

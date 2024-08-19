@@ -2,6 +2,7 @@ import { createContext, useEffect, useState } from "react";
 import { useAuthContext } from "./AuthContext";
 import io from "socket.io-client";
 import { useContext } from "react";
+import { backendUrl } from "../Utils/constants";
 
 export const SocketContext = createContext();
 
@@ -16,7 +17,7 @@ export const SocketContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (authUser) {
-      const newSocket = io("https://talkative-2ld0.onrender.com", {
+      const newSocket = io(`${backendUrl}`, {
         withCredentials: true,
         query: { userId: authUser?._id },
       });

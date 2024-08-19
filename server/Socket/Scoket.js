@@ -4,13 +4,14 @@ const { Server } = require("socket.io");
 const MessageModel = require("../Models/messageModel");
 const ConversationModel = require("../Models/conversationModel");
 const UserModel = require("../Models/userModel");
+const { frontEND_URL } = require("../Utils/constants");
 
 const app = express();
 
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "https://chat-talkative.vercel.app",
+    origin: `${frontEND_URL}`,
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -51,35 +52,16 @@ io.on("connection", async (socket) => {
         { senderId: receiverId, receiverId: senderId, seen: { $ne: senderId } },
         { $push: { seen: senderId } }
       );
-
-      // Emitting conversationUpdated event
-      const updatedConversation = await ConversationModel.findOne({
-        participants: { $all: [senderId, receiverId] },
-      })
-        .populate("participants")
-        .populate("messages");
-
-      updatedConversation.participants.forEach(async (participant) => {
-        const unreadMessageCount = await MessageModel.countDocuments({
-          receiverId: participant._id,
-          seen: { $ne: participant._id },
-        });
-
-        const socketId = getSocketId(participant._id.toString());
-        if (socketId) {
-          io.to(socketId).emit(
-            "seenMessageUpdated",
-            updatedConversation?.messages
-          );
-          io.to(socketId).emit("conversationUpdated", {
-            updatedConversation,
-            unreadMessageCount,
-          });
-        }
-      });
+      UpdateConvo_Reuseable_Function(senderId, receiverId);
     } catch (error) {
       console.log(error);
     }
+  });
+
+  socket.on("Delete_Message", async (messageModel) => {
+    const { senderId, receiverId, _id } = messageModel;
+    await MessageModel.findByIdAndDelete(_id);
+    UpdateConvo_Reuseable_Function(senderId, receiverId); 
   });
 
   socket.on("disconnect", async () => {
@@ -92,6 +74,33 @@ io.on("connection", async (socket) => {
 const getSocketId = (userId) => {
   return userSocketMap[userId];
 };
+
+const UpdateConvo_Reuseable_Function = async (senderId, receiverId) => {
+  const updatedConversation = await ConversationModel.findOne({
+    participants: { $all: [senderId, receiverId] },
+  })
+    .populate("participants")
+    .populate("messages");
+
+  updatedConversation.participants.forEach(async (participant) => {
+    const unreadMessageCount = await MessageModel.countDocuments({
+      receiverId: participant._id,
+      seen: { $ne: participant._id },
+    });
+
+    const socketId = getSocketId(participant._id.toString());
+    if (socketId) {
+      io.to(socketId).emit(
+        "seenMessageUpdated",
+        updatedConversation?.messages
+      );
+      io.to(socketId).emit("conversationUpdated", {
+        updatedConversation,
+        unreadMessageCount,
+      });
+    }
+  });
+}
 
 module.exports = {
   server,

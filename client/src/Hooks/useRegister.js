@@ -1,5 +1,6 @@
 import axios from "axios";
 import { uploadFile } from "../Utils/uploadFile";
+import { backendUrl } from "../Utils/constants";
 
 const useRegister = async (formData, avatar) => {
   const UploadProfilePic = await uploadFile(avatar);
@@ -8,7 +9,7 @@ const useRegister = async (formData, avatar) => {
     profilePic: UploadProfilePic?.secure_url,
   };
 
-  const url = `https://talkative-2ld0.onrender.com/api/auth/register`;
+  const url = `${backendUrl}/api/auth/register`;
 
   const response = await fetch(url, {
     method: "POST",

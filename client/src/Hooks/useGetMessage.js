@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import useConversation from "../Zustand/useConversation";
+import { backendUrl } from "../Utils/constants";
 
 const useGetMessage = () => {
   const [loading, setLoading] = useState(false);
@@ -8,7 +9,7 @@ const useGetMessage = () => {
   useEffect(() => {
     const getMessage = async () => {
       setLoading(true);
-      const url = `https://talkative-2ld0.onrender.com/api/chat/${
+      const url = `${backendUrl}/api/chat/${
         selectedConversation?._id
       }`;
 
