@@ -9,7 +9,7 @@ const useRegister = async (formData, avatar) => {
     profilePic: UploadProfilePic?.secure_url,
   };
 
-  const url = `${backendUrl}/api/auth/register`;
+  const url = `https://talkative-2ld0.onrender.com/api/auth/register`;
 
   const response = await fetch(url, {
     method: "POST",

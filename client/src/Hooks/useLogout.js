@@ -1,7 +1,7 @@
 import { backendUrl } from "../Utils/constants";
 
 const useLogout = async (userId) => {
-  const url = `${backendUrl}/api/auth/logout`;
+  const url = `https://talkative-2ld0.onrender.com/api/auth/logout`;
 
   const response = await fetch(url, {
     method: "POST",

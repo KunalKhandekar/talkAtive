@@ -11,7 +11,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: `${frontEND_URL}`,
+    origin: "https://chat-talkative.vercel.app",
     methods: ["GET", "POST"],
     credentials: true,
   },

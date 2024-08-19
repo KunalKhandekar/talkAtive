@@ -17,7 +17,7 @@ const SearchDialog = ({ onClose }) => {
   const searchUsersHandler = async () => {
     setLoading(true);
     try {
-      const url = `${backendUrl}/api/user/search-users`;
+      const url = `https://talkative-2ld0.onrender.com/api/user/search-users`;
       const response = await axios.post(
         url,
         { search: search },
