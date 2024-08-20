@@ -56,7 +56,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-[100vh] flex items-center justify-center bg-slate-950 m-auto">
+    <div className="max-h-[100vh] flex items-center justify-center bg-slate-950 m-auto">
       <div className="md:bg-slate-900 p-8 rounded-lg shadow-md w-full max-w-md bg-slate-950">
         <h2 className="text-zinc-300 text-2xl font-bold mb-6 text-center">
           {loading ? "Logining..." : "Login"}
