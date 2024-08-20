@@ -91,7 +91,7 @@ const Conversation = () => {
           {mediaLoading ||
           inputMessage.imageURL != "" ||
           inputMessage.videoURL != "" ? (
-            <div className="h-[calc(100vh-175px)] overflow-auto p-0 relative">
+            <div className="h-[calc(100vh-175px)] overflow-auto p-0 px-2 relative">
             <div className="absolute h-full w-full p-5 flex items-center justify-center bg-slate-950 bg-opacity-50">
               <div className="absolute top-0 text-xl right-0 m-2 p-2 cursor-pointer bg-red-500 font-bold text-white rounded-full" onClick={() => setInputMessage({
                 ...inputMessage,

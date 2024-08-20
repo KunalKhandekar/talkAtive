@@ -1,14 +1,12 @@
 import { useFileHandler } from "6pp";
 import React, { useState } from "react";
+import toast from "react-hot-toast";
+import { LuEye, LuEyeOff } from "react-icons/lu";
 import { MdCameraAlt } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
-import { default_avatar } from "../Utils/constants";
-import { LuEyeOff } from "react-icons/lu";
-import { LuEye } from "react-icons/lu";
-import useRegister from "../Hooks/useRegister";
 import { useAuthContext } from "../Context/AuthContext";
-import useFullScreen from "../Hooks/useFullScreen";
+import useRegister from "../Hooks/useRegister";
+import { default_avatar } from "../Utils/constants";
 
 const Register = () => {
   const { setAuthUser } = useAuthContext();
@@ -23,8 +21,6 @@ const Register = () => {
     profilePic: "",
   });
   const [loading, setLoading] = useState(false);
-
-  useFullScreen();
 
   const handleChange = (e) => {
     const { name, value } = e.target;

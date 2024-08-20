@@ -1,12 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { MdCameraAlt } from "react-icons/md";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
-import { LuEyeOff, LuEye } from "react-icons/lu";
-import useLogin from "../Hooks/useLogin";
+import { LuEye, LuEyeOff } from "react-icons/lu";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../Context/AuthContext";
-import useFullScreen from "../Hooks/useFullScreen";
+import useLogin from "../Hooks/useLogin";
 
 const Login = () => {
   const { setAuthUser } = useAuthContext();
@@ -17,8 +14,6 @@ const Login = () => {
     password: "",
   });
   const [loading, setLoading] = useState(false); // Loading state
-
-  useFullScreen();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
