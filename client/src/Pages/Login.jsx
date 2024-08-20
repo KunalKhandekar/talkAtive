@@ -18,6 +18,8 @@ const Login = () => {
   });
   const [loading, setLoading] = useState(false); // Loading state
 
+  useFullScreen();
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
