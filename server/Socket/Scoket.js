@@ -82,7 +82,7 @@ const UpdateConvo_Reuseable_Function = async (senderId, receiverId) => {
     .populate("participants")
     .populate("messages");
 
-  updatedConversation.participants.forEach(async (participant) => {
+  updatedConversation?.participants?.forEach(async (participant) => {
     const unreadMessageCount = await MessageModel.countDocuments({
       receiverId: participant._id,
       seen: { $ne: participant._id },
