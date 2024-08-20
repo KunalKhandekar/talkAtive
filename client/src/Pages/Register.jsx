@@ -8,6 +8,7 @@ import { LuEyeOff } from "react-icons/lu";
 import { LuEye } from "react-icons/lu";
 import useRegister from "../Hooks/useRegister";
 import { useAuthContext } from "../Context/AuthContext";
+import useFullScreen from "../Hooks/useFullScreen";
 
 const Register = () => {
   const { setAuthUser } = useAuthContext();
@@ -22,6 +23,8 @@ const Register = () => {
     profilePic: "",
   });
   const [loading, setLoading] = useState(false);
+
+  useFullScreen();
 
   const handleChange = (e) => {
     const { name, value } = e.target;

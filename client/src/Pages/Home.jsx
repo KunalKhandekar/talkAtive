@@ -2,9 +2,12 @@ import Conversation from "../Components/Conversation/Conversation";
 import Sidebar from "../Components/Sidebar/Sidebar";
 import { useEffect } from "react";
 import { useAuthContext } from "../Context/AuthContext";
+import useFullScreen from "../Hooks/useFullScreen";
 
 const Home = () => {
   const { setAuthUser } = useAuthContext();
+  
+  useFullScreen();
 
   useEffect(() => {
     setAuthUser(JSON.parse(localStorage.getItem("user")));
