@@ -1,11 +1,9 @@
-import { useFileHandler } from "6pp";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MdCameraAlt } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { LuEyeOff } from "react-icons/lu";
-import { LuEye } from "react-icons/lu";
+import { LuEyeOff, LuEye } from "react-icons/lu";
 import useLogin from "../Hooks/useLogin";
 import { useAuthContext } from "../Context/AuthContext";
 
@@ -17,7 +15,38 @@ const Login = () => {
     email: "",
     password: "",
   });
-  const [loading, setLoading] = useState(false); // Loading state
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    // Function to enter fullscreen mode
+    const openFullscreen = () => {
+      const elem = document.documentElement;
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.mozRequestFullScreen) { // Firefox
+        elem.mozRequestFullScreen();
+      } else if (elem.webkitRequestFullscreen) { // Chrome, Safari, Opera
+        elem.webkitRequestFullscreen();
+      } else if (elem.msRequestFullscreen) { // IE/Edge
+        elem.msRequestFullscreen();
+      }
+    };
+
+    openFullscreen(); // Open fullscreen on component mount
+
+    return () => {
+      // Cleanup function to exit fullscreen if needed
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.mozCancelFullScreen) { // Firefox
+        document.mozCancelFullScreen();
+      } else if (document.webkitExitFullscreen) { // Chrome, Safari, Opera
+        document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) { // IE/Edge
+        document.msExitFullscreen();
+      }
+    };
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -59,7 +88,7 @@ const Login = () => {
     <div className="min-h-[100vh] flex items-center justify-center bg-slate-950 m-auto">
       <div className="md:bg-slate-900 p-8 rounded-lg shadow-md w-full max-w-md bg-slate-950">
         <h2 className="text-zinc-300 text-2xl font-bold mb-6 text-center">
-          {loading ? "Logining..." : "Login"}
+          {loading ? "Logging in..." : "Login"}
         </h2>
         <form onSubmit={handleSubmit} className="relative">
           <div className="mb-4">
@@ -97,7 +126,7 @@ const Login = () => {
             className={`w-full ${
               loading ? "bg-blue-800 my-5" : "bg-blue-700"
             } text-white py-2 rounded shadow-sm hover:bg-blue-800 focus:outline-none focus:ring focus:ring-blue-300 relative`}
-            disabled={loading} // Disable button when loading
+            disabled={loading}
           >
             {loading ? (
               <div className="loading-spinner loading bg-slate-100"></div>
