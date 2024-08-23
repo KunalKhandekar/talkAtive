@@ -14,11 +14,11 @@ import { markMessagesAsSeen } from "../../Hooks/useSeenMessage";
 import { processMessagesWithTimeline } from "../../Utils/addTimeLabel";
 import { FaCross } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
+import OpenMediaDialog from "../Dailog/OpenMediaDialog";
 
 const Conversation = () => {
-  const { selectedConversation, setSelectedConversation, typingUsers } =
+  const { selectedConversation, setSelectedConversation, typingUsers, openMedia, setOpenMedia } =
     useConversation();
-  const { authUser } = useAuthContext();
   const { messages, loading } = useGetMessage();
   const { onlineUsers, socket } = useSocketContext();
   const [mediaLoading, setMediaLoading] = useState(false);
@@ -170,6 +170,7 @@ const Conversation = () => {
           </div>
         </div>
       )}
+      {openMedia?.state && <OpenMediaDialog onClose={() => setOpenMedia(false, "", "")} Media={openMedia} />}
     </div>
   );
 };

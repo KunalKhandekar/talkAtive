@@ -5,9 +5,10 @@ import moment from "moment";
 import { CiMenuKebab } from "react-icons/ci";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { useSocketContext } from "../../Context/SocketContext";
+import { BsPlay } from "react-icons/bs";
 
 const Message = ({ message }) => {
-  const { selectedConversation } = useConversation();
+  const { selectedConversation, setOpenMedia } = useConversation();
   const { authUser } = useAuthContext();
   const { socket } = useSocketContext();
 
@@ -18,7 +19,18 @@ const Message = ({ message }) => {
 
   const handleMessageDelete = (messageModel) => {
     console.log("message delete", messageModel);
-    socket?.emit("Delete_Message", (messageModel));
+    socket?.emit("Delete_Message", messageModel);
+  };
+
+  const isImage = message?.imageURL ? true : false;
+
+  const openImage = () => {
+    console.log("open image", message?.imageURL);
+    setOpenMedia(
+      true,
+      isImage ? message?.imageURL : message?.videoURL,
+      isImage ? "image" : "video"
+    );
   };
 
   return (
@@ -40,7 +52,9 @@ const Message = ({ message }) => {
 
         <div
           className={`chat-bubble ${
-            message.imageURL || message.videoURL ? "p-1" : ""
+            message.imageURL || message.videoURL
+              ? "p-1 sm:max-w-md max-w-[240px]"
+              : ""
           } ${
             Sender
               ? "bg-blue-700 text-white relative"
@@ -60,7 +74,10 @@ const Message = ({ message }) => {
                 tabIndex={0}
                 className="dropdown-content menu bg-slate-800 rounded-box z-[1] w-auto h-auto shadow"
               >
-                <li className="w-auto" onClick={() => handleMessageDelete(message)}>
+                <li
+                  className="w-auto"
+                  onClick={() => handleMessageDelete(message)}
+                >
                   <FaRegTrashAlt size={50} color="red" />
                 </li>
               </ul>
@@ -70,16 +87,19 @@ const Message = ({ message }) => {
             <img
               src={message?.imageURL}
               alt={message?.message}
-              className="h-64 w-auto rounded-xl"
+              className="h-auto w-auto rounded-xl cursor-pointer"
+              onClick={openImage}
             />
           )}
           {message?.videoURL && (
+            <div className="h-auto w-auto rounded-xl relative cursor-pointer" onClick={openImage}>
             <video
-              controls
               src={message?.videoURL}
               alt={message?.message}
-              className="aspect-video w-auto rounded-xl"
+              className="h-auto w-auto rounded-xl"
             />
+            <BsPlay className="text-center w-full text-5xl cursor-pointer"/>
+          </div>
           )}
           {message.message && (
             <p

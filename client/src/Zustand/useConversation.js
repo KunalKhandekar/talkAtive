@@ -7,6 +7,20 @@ const useConversation = create((set) => ({
       selectedConversation,
     }),
   messages: [],
+  openMedia: {
+    state: false,
+    url: "",
+    type: "",
+  },
+  setOpenMedia: (state, url, type) =>
+    set({
+      openMedia: {
+        state,
+        url,
+        type,
+      },
+    }),
+
   setMessages: (messages) =>
     set({
       messages,
@@ -20,7 +34,7 @@ const useConversation = create((set) => ({
       },
     })),
   removeTypingUser: (userId) =>
-    set((state) => { 
+    set((state) => {
       const { [userId]: _, ...rest } = state.typingUsers; //[userId]: _ (Will delete the user Key-value)
       return { typingUsers: rest };
     }),

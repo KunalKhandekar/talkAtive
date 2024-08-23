@@ -8,6 +8,7 @@ import { useAuthContext } from "../../Context/AuthContext";
 import useConversation from "../../Zustand/useConversation";
 import SearchDialog from "../Dailog/SearchDialog";
 import UpdateDialog from "../Dailog/UpdateDialog";
+import OpenMediaDialog from "../Dailog/OpenMediaDialog";
 const Sidebar = () => {
   const [openLogout, setOpenLogout] = useState(false);
   const [openSearch, setOpenSerach] = useState(false);
@@ -74,6 +75,8 @@ const Sidebar = () => {
       {openSearch && <SearchDialog onClose={() => setOpenSerach(false)} />}
 
       {openUpdate && <UpdateDialog onClose={() => setOpenUpdate(false)} />}
+
+      
     </div>
   );
 };
