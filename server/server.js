@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 3000;
 // CORS Configuration
 app.use(
   cors({
-    origin: "https://chat-talkative.vercel.app", // Replace with your frontend domain
+    origin: process.env.FRONTEND_URL, // Replace with your frontend domain
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true, // Allow credentials (cookies, authorization headers)
   })

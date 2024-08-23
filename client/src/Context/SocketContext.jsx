@@ -17,7 +17,7 @@ export const SocketContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (authUser) {
-      const newSocket = io(`https://talkative-2ld0.onrender.com`, {
+      const newSocket = io(`${import.meta.env.VITE_BACKEND_URL}`, {
         withCredentials: true,
         query: { userId: authUser?._id },
       });

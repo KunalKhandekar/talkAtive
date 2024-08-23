@@ -10,7 +10,7 @@ const useGetConversation = () => {
 
   const getConversation = async () => {
     setLoading(true);
-    const url = `https://talkative-2ld0.onrender.com/api/user/conversation`;
+    const url = `${import.meta.env.VITE_BACKEND_URL}/api/user/conversation`;
     const response = await fetch(url, {
       method: "GET",
       headers: {

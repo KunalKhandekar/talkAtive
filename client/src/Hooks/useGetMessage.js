@@ -9,7 +9,7 @@ const useGetMessage = () => {
   useEffect(() => {
     const getMessage = async () => {
       setLoading(true);
-      const url = `https://talkative-2ld0.onrender.com/api/chat/${
+      const url = `${import.meta.env.VITE_BACKEND_URL}/api/chat/${
         selectedConversation?._id
       }`;
 

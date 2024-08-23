@@ -8,7 +8,7 @@ const useSendMessage = () => {
 
   const sendMessage = async (messageOBJ) => {
     setLoading(true);
-    const url = `https://talkative-2ld0.onrender.com/api/chat/send/${
+    const url = `${import.meta.env.VITE_BACKEND_URL}/api/chat/send/${
       selectedConversation?._id
     }`;
 
