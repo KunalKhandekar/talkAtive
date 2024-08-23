@@ -37,14 +37,14 @@ const OpenMediaDialog = ({ onClose, Media }) => {
           <img
             src={url}
             alt="image"
-            className="w-full h-auto rounded-lg"
+            className="w-full max-h-[calc(100vh-200px)] rounded-lg object-contain"
             onClick={() => onClose()}
           />
         ) : (
           <video
             src={url}
             controls
-            className="w-full h-auto rounded-lg"
+            className="w-full max-h-[calc(100vh-200px)] rounded-lg object-contain"
             onClick={() => onClose()}
           ></video>
         )}

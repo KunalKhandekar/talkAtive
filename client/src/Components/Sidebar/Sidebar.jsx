@@ -25,14 +25,6 @@ const Sidebar = () => {
       <div className="border-r border-slate-800 md:h-auto">
         <div className="flex md:flex-col justify-between md:items-stretch w-full h-full p-2 py-3 gap-2">
           <div className="flex md:flex-col gap-2">
-            {/* Chats */}
-            <div
-              className="w-16 h-16 rounded-full hover:bg-slate-800 flex items-center justify-center cursor-pointer"
-              title="Chats"
-            >
-              <BsChatTextFill size={30} />
-            </div>
-
             {/* Search */}
             <div
               className="w-16 h-16 rounded-full hover:bg-slate-800 flex items-center justify-center cursor-pointer"

@@ -114,7 +114,8 @@ const Conversation = () => {
                 <img
                   src={inputMessage.imageURL}
                   alt="image"
-                  className="w-full h-full"
+                  className="w-full h-full
+              object-contain"
                 />
               )}
             </div>
