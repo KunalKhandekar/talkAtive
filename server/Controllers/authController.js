@@ -3,6 +3,8 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const errorHandler = require("../Utils/ErrorHandler");
 const { userSocketMap } = require("../Socket/Scoket");
+const otpGenerator = require("otp-generator");
+const { sendForgotEmail, sendPassResetConfirmationEmail } = require("../Utils/useSendMail");
 
 // Register Controller
 const Register = async (req, res, next) => {
@@ -32,7 +34,7 @@ const Register = async (req, res, next) => {
     const token = jwt.sign(
       { userId: newUser._id, email: newUser.email },
       process.env.JWT_SECRET,
-      { expiresIn: '10y' } // JWT expiration
+      { expiresIn: "10y" } // JWT expiration
     );
 
     return res
@@ -82,13 +84,15 @@ const Login = async (req, res, next) => {
     }
 
     if (userSocketMap[user._id.toString()]) {
-      return next(errorHandler(400, "User is currently logged in from another device"));
+      return next(
+        errorHandler(400, "User is currently logged in from another device")
+      );
     }
 
     const token = jwt.sign(
       { userId: user._id, email: user.email },
       process.env.JWT_SECRET,
-      { expiresIn: '10y' }
+      { expiresIn: "10y" }
     );
 
     return res
@@ -129,4 +133,106 @@ const Logout = async (req, res) => {
   }
 };
 
-module.exports = { Register, Login, Logout };
+const sendCode = async (req, res, next) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return next(errorHandler(400, "All fields are required"));
+  }
+
+  try {
+    const user = await UserModel.findOne({ email });
+    if (!user) {
+      return next(errorHandler(400, "User not found"));
+    }
+    const code = otpGenerator.generate(6, {
+      upperCaseAlphabets: true,
+      lowerCaseAlphabets: false,
+      specialChars: false,
+      alphabets: false,
+      digits: true,
+    });
+
+    const FullNameOfUser = user?.firstName + " " + user?.lastName;
+    const response = await sendForgotEmail(email, FullNameOfUser, code);
+
+    if (response?.success) {
+      const hashedCode = await bcrypt.hash(code, 10);
+      const updatedUser = await UserModel.findByIdAndUpdate(
+        user._id,
+        { code: hashedCode, expiresIn: Date.now() + 10 * 60 * 1000 },
+        { new: true }
+      ).select("-password");
+
+      console.log(updatedUser);
+
+      return res
+        .status(200)
+        .json({ message: "Code has been sent to email", user: updatedUser, success: true });
+    }
+
+    return next(errorHandler(500, "Internal Server Error"));
+  } catch (error) {
+    console.error("Send Code Error:", error);
+    return next(errorHandler(500, "Internal Server Error"));
+  }
+};
+
+const verifyCode = async (req, res, next) => {
+  const { email, code } = req.body;
+  if (!email || !code) {
+    return next(errorHandler(400, "All fields are required"));
+  }
+  try { 
+    const user = await UserModel.findOne({ email });
+    if (!user) {
+      return next(errorHandler(400, "User not found"));
+    }
+
+    const isMatch = await bcrypt.compare(code, user?.code);
+
+    if (!isMatch) {
+      return next(errorHandler(400, "Code is incorrect, please try again"));
+    }
+
+    if (user?.expiresIn < Date.now()) {
+      return next(errorHandler(400, "Code has expired, please try again"));
+    }
+
+    return res
+      .status(200)
+      .json({ message: "Code has been verified", success: true });
+
+  } catch (error) { 
+    console.error("Verify Code Error:", error);
+    return next(errorHandler(500, "Internal Server Error"));
+  }
+};
+
+const resetPassword = async (req, res, next) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return next(errorHandler(400, "All fields are required"));
+  }
+  try {
+    const user = await UserModel.findOne({ email });
+    if (!user) {
+      return next(errorHandler(400, "User not found"));
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      user._id,
+      { password: hashedPassword },
+      { new: true }
+    ).select("-password");
+    await sendPassResetConfirmationEmail(email, updatedUser?.firstName);
+    return res
+      .status(200)
+      .json({ message: "Password has been reset", user: updatedUser, success: true });
+  } catch (error) {
+    console.error("Reset Password Error:", error);
+    return next(errorHandler(500, "Internal Server Error"));
+  }
+};
+
+module.exports = { Register, Login, Logout, sendCode, verifyCode, resetPassword };

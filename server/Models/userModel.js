@@ -23,7 +23,12 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
-    
+    code: {
+      type: String,
+    },
+    expiresIn: {
+      type: Date,
+    },
   },
   { timestamps: true }
 );

@@ -56,7 +56,7 @@ const Conversation = () => {
     >
       {selectedConversation ? (
         <div className="w-full h-full">
-          <div className="h-20 flex items-center gap-3 p-2 px-6 border-b border-slate-800">
+          <div className="h-20 flex items-center gap-3 p-2 px-6 border-b border-slate-800 sticky top-0">
             <div
               className="p-1 bg-slate-800 rounded-full flex justify-center items-center cursor-pointer"
               onClick={() => setSelectedConversation(null)}

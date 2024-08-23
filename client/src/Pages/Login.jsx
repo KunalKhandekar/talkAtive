@@ -4,6 +4,7 @@ import { LuEye, LuEyeOff } from "react-icons/lu";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../Context/AuthContext";
 import useLogin from "../Hooks/useLogin";
+import logo from "../assets/logo.ico";
 
 const Login = () => {
   const { setAuthUser } = useAuthContext();
@@ -52,7 +53,17 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-[100vh] flex items-center justify-center bg-slate-950 m-auto">
+    <>
+    <div className="w-[100vw] text-center absolute top-10 flex items-center justify-center gap-3">
+        <img
+          src={logo}
+          alt="Hero Image"
+          className="w-20 rounded-lg"
+        />  
+        <h1 className="text-3xl font-bold text-slate-100">talkAtive</h1>
+      </div>
+    <div className="min-h-[100vh] flex items-center justify-center bg-slate-950 m-auto flex-col gap-5">
+
       <div className="md:bg-slate-900 p-8 rounded-lg shadow-md w-full max-w-md bg-slate-950">
         <h2 className="text-zinc-300 text-2xl font-bold mb-6 text-center">
           {loading ? "Logging in..." : "Login"}
@@ -88,6 +99,15 @@ const Login = () => {
               </div>
             </label>
           </div>
+
+          <div className="text-right mb-4">
+            <Link
+              to="/forgot-password"
+              className="text-blue-500 font-semibold"
+            >
+              Forgot Password?
+            </Link>
+          </div>
           <button
             type="submit"
             className={`w-full ${
@@ -113,6 +133,7 @@ const Login = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
