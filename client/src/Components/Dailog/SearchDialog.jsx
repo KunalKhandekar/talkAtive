@@ -1,10 +1,9 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { MdOutlineSearch } from "react-icons/md";
 import { useAuthContext } from "../../Context/AuthContext";
-import axios from "axios";
-import useConversation from "../../Zustand/useConversation";
 import { useSocketContext } from "../../Context/SocketContext";
-import { backendUrl } from "../../Utils/constants";
+import useConversation from "../../Zustand/useConversation";
 
 const SearchDialog = ({ onClose }) => {
   const { authUser } = useAuthContext();

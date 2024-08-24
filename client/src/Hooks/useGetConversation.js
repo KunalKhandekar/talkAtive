@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { backendUrl } from "../Utils/constants";
 
 const useGetConversation = () => {
   const [loading, setLoading] = useState(false);

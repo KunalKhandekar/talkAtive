@@ -1,9 +1,6 @@
 import React, { useState } from "react";
 import toast from "react-hot-toast";
-import { LuEye, LuEyeOff } from "react-icons/lu";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuthContext } from "../Context/AuthContext";
-import useLogin from "../Hooks/useLogin";
 import logo from "../assets/logo.ico";
 import useSendCode from "../Hooks/useSendCode";
 import useVerifyCode from "../Hooks/useVerifyCode";
@@ -54,7 +51,6 @@ const ForgotPassword = () => {
     setLoading(true); 
     try {
       const response = await useVerifyCode(formData.email, formData.code);
-      console.log(response);
       if (response?.success) {
         toast.success(response?.message);
         navigate("/reset-password", { state: { email: formData.email } });

@@ -164,8 +164,6 @@ const sendCode = async (req, res, next) => {
         { new: true }
       ).select("-password");
 
-      console.log(updatedUser);
-
       return res
         .status(200)
         .json({ message: "Code has been sent to email", user: updatedUser, success: true });

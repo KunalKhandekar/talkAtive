@@ -1,12 +1,12 @@
-import { RiAttachment2 } from "react-icons/ri";
-import { LuImage, LuSend, LuVideo } from "react-icons/lu";
+import { useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { FaRegImages } from "react-icons/fa";
 import { IoIosVideocam } from "react-icons/io";
-import useSendMessage from "../../Hooks/useSendMessage";
-import { useState, useRef } from "react";
+import { LuSend } from "react-icons/lu";
+import { RiAttachment2 } from "react-icons/ri";
 import { useSocketContext } from "../../Context/SocketContext";
+import useSendMessage from "../../Hooks/useSendMessage";
 import { uploadFile } from "../../Utils/uploadFile";
-import toast from "react-hot-toast";
 
 const MessageInput = ({ toUserId, setMediaLoading, inputMessage, setInputMessage }) => {
   const { socket } = useSocketContext();

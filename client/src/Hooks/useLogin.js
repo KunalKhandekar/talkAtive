@@ -1,4 +1,3 @@
-import { backendUrl } from "../Utils/constants";
 
 const useLogin = async (formData) => {
   const url = `${import.meta.env.VITE_BACKEND_URL}/api/auth/login`;

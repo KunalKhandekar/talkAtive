@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { LuEye, LuEyeOff } from "react-icons/lu";
-import logo from "../assets/logo.ico";
 import { useLocation, useNavigate } from "react-router-dom";
+import logo from "../assets/logo.ico";
 import useResetPassword from "../Hooks/useResetPassword";
 
 const NewPassword = () => {

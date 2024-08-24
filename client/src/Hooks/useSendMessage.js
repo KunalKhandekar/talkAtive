@@ -1,6 +1,5 @@
 import { useState } from "react";
 import useConversation from "../Zustand/useConversation";
-import { backendUrl } from "../Utils/constants";
 
 const useSendMessage = () => {
   const [loading, setLoading] = useState(false);

@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { MdCameraAlt } from "react-icons/md";
-import toast from "react-hot-toast";
-import { useAuthContext } from "../../Context/AuthContext";
 import { useFileHandler } from "6pp";
-import { uploadFile } from "../../Utils/uploadFile";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { backendUrl } from "../../Utils/constants";
+import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { MdCameraAlt } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../../Context/AuthContext";
+import { uploadFile } from "../../Utils/uploadFile";
 
 const UpdateDialog = ({ onClose }) => {
   const navigate = useNavigate();

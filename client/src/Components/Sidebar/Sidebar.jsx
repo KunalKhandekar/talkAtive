@@ -1,14 +1,11 @@
-import { BsChatTextFill } from "react-icons/bs";
-import { RiUserSearchFill } from "react-icons/ri";
-import { RiLogoutCircleLine } from "react-icons/ri";
-import SidebarConversation from "./SidebarConversation";
-import { useEffect, useState } from "react";
-import LogoutDialog from "../Dailog/LogoutDialog";
+import { useState } from "react";
+import { RiLogoutCircleLine, RiUserSearchFill } from "react-icons/ri";
 import { useAuthContext } from "../../Context/AuthContext";
 import useConversation from "../../Zustand/useConversation";
+import LogoutDialog from "../Dailog/LogoutDialog";
 import SearchDialog from "../Dailog/SearchDialog";
 import UpdateDialog from "../Dailog/UpdateDialog";
-import OpenMediaDialog from "../Dailog/OpenMediaDialog";
+import SidebarConversation from "./SidebarConversation";
 const Sidebar = () => {
   const [openLogout, setOpenLogout] = useState(false);
   const [openSearch, setOpenSerach] = useState(false);

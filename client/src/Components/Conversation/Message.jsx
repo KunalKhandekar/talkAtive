@@ -1,11 +1,11 @@
-import { useAuthContext } from "../../Context/AuthContext";
-import useConversation from "../../Zustand/useConversation";
-import { IoCheckmarkDone } from "react-icons/io5";
 import moment from "moment";
+import { BsPlay } from "react-icons/bs";
 import { CiMenuKebab } from "react-icons/ci";
 import { FaRegTrashAlt } from "react-icons/fa";
+import { IoCheckmarkDone } from "react-icons/io5";
+import { useAuthContext } from "../../Context/AuthContext";
 import { useSocketContext } from "../../Context/SocketContext";
-import { BsPlay } from "react-icons/bs";
+import useConversation from "../../Zustand/useConversation";
 
 const Message = ({ message }) => {
   const { selectedConversation, setOpenMedia } = useConversation();
@@ -18,14 +18,12 @@ const Message = ({ message }) => {
     : selectedConversation?.profilePic;
 
   const handleMessageDelete = (messageModel) => {
-    console.log("message delete", messageModel);
     socket?.emit("Delete_Message", messageModel);
   };
 
   const isImage = message?.imageURL ? true : false;
 
   const openImage = () => {
-    console.log("open image", message?.imageURL);
     setOpenMedia(
       true,
       isImage ? message?.imageURL : message?.videoURL,

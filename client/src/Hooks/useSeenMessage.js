@@ -1,4 +1,3 @@
-import { backendUrl } from "../Utils/constants";
 
 export const markMessagesAsSeen = async (receiverId, senderId) => {
     const url = `${import.meta.env.VITE_BACKEND_URL}/api/chat/mark-as-seen`;

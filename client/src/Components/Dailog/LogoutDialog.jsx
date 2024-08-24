@@ -1,8 +1,8 @@
 import React from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import useLogout from "../../Hooks/useLogout";
 import { useAuthContext } from "../../Context/AuthContext";
+import useLogout from "../../Hooks/useLogout";
 import useConversation from "../../Zustand/useConversation";
 
 const LogoutDialog = ({ onClose }) => {

@@ -1,6 +1,4 @@
-import axios from "axios";
 import { uploadFile } from "../Utils/uploadFile";
-import { backendUrl } from "../Utils/constants";
 
 const useRegister = async (formData, avatar) => {
   const UploadProfilePic = await uploadFile(avatar);

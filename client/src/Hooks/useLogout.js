@@ -1,4 +1,3 @@
-import { backendUrl } from "../Utils/constants";
 
 const useLogout = async (userId) => {
   const url = `${import.meta.env.VITE_BACKEND_URL}/api/auth/logout`;

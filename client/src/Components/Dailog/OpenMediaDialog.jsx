@@ -1,5 +1,5 @@
-import React from "react";
 import { saveAs } from "file-saver";
+import React from "react";
 
 const OpenMediaDialog = ({ onClose, Media }) => {
   const { type, url } = Media;

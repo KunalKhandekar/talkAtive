@@ -1,12 +1,11 @@
 import { useEffect } from "react";
-import { useSocketContext } from "../../Context/SocketContext";
-import useGetConversation from "../../Hooks/useGetConversation";
-import useConversation from "../../Zustand/useConversation";
-import moment from "moment";
-import { formatDate } from "../../Utils/dateFormater";
-import { RiUserSearchFill } from "react-icons/ri";
 import { FaRegImages } from "react-icons/fa";
 import { IoIosVideocam } from "react-icons/io";
+import { RiUserSearchFill } from "react-icons/ri";
+import { useSocketContext } from "../../Context/SocketContext";
+import useGetConversation from "../../Hooks/useGetConversation";
+import { formatDate } from "../../Utils/dateFormater";
+import useConversation from "../../Zustand/useConversation";
 
 const SidebarConversation = ({ setOpenSerach }) => {
   const {

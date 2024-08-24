@@ -1,6 +1,6 @@
 import React from "react";
-import useConversation from "../../Zustand/useConversation";
 import "../../Utils/typingAnimation.css"; // Import the CSS file for typing animation
+import useConversation from "../../Zustand/useConversation";
 
 const Typing = () => {
   const { selectedConversation } = useConversation();

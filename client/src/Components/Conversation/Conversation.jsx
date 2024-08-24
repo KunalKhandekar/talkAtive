@@ -1,20 +1,17 @@
-import { IoIosArrowBack } from "react-icons/io";
-import MessageInput from "./MessageInput";
-import useConversation from "../../Zustand/useConversation";
-import NoConvo from "../../assets/NoConvo.png";
-import useGetMessage from "../../Hooks/useGetMessage";
-import Message from "./Message";
-import { useSocketContext } from "../../Context/SocketContext";
-import useListenMessage from "../../Hooks/useListenMessage";
 import { useEffect, useRef, useState } from "react";
-import Typing from "./Typing";
-import useDebounce from "../../Hooks/useDebouncing";
-import { useAuthContext } from "../../Context/AuthContext";
-import { markMessagesAsSeen } from "../../Hooks/useSeenMessage";
-import { processMessagesWithTimeline } from "../../Utils/addTimeLabel";
-import { FaCross } from "react-icons/fa";
+import { IoIosArrowBack } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
+import NoConvo from "../../assets/NoConvo.png";
+import { useSocketContext } from "../../Context/SocketContext";
+import useDebounce from "../../Hooks/useDebouncing";
+import useGetMessage from "../../Hooks/useGetMessage";
+import useListenMessage from "../../Hooks/useListenMessage";
+import { processMessagesWithTimeline } from "../../Utils/addTimeLabel";
+import useConversation from "../../Zustand/useConversation";
 import OpenMediaDialog from "../Dailog/OpenMediaDialog";
+import Message from "./Message";
+import MessageInput from "./MessageInput";
+import Typing from "./Typing";
 
 const Conversation = () => {
   const { selectedConversation, setSelectedConversation, typingUsers, openMedia, setOpenMedia } =
