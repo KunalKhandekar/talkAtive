@@ -15,6 +15,19 @@ https://chat-talkative.vercel.app/
 * **User Presence:** Displays online users and users currently typing messages, enhancing communication visibility.
 * **Responsive Interface:** Adapts seamlessly across various screen sizes, delivering an optimal user experience on any device.
 
+### Images
+
+![Screenshot 2024-08-24 232730](https://github.com/user-attachments/assets/44938190-de2c-44af-80c4-54a74f34f457)
+
+![Screenshot 2024-08-24 232742](https://github.com/user-attachments/assets/2cfd6f2a-0f5d-4c00-a637-5b53ec0e5447)
+
+![Screenshot 2024-08-24 232647](https://github.com/user-attachments/assets/2ede42ec-74a9-4b87-aa65-94fc1620cb30)
+
+![Screenshot 2024-08-24 232657](https://github.com/user-attachments/assets/54d73535-cf2b-41ac-bea9-75bab3da11c4)
+
+![Screenshot 2024-08-24 232706](https://github.com/user-attachments/assets/fcac0671-33eb-41d8-80e5-0b53b6b51f48)
+
+
 ### Technologies Used
 
 **Frontend:**
