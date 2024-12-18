@@ -3,7 +3,7 @@ const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-const { server, app } = require("./Socket/Socket.js");
+const { server, app } = require("./Socket/Scoket.js");
 
 dotenv.config();
 
