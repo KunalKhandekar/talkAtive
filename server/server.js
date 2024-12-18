@@ -31,17 +31,17 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(cookieParser());
 
-// Define routes
-app.use("/api/auth", require("./Routes/authRoutes.js"));
-app.use("/api/chat", require("./Routes/chatRoutes.js"));
-app.use("/api/user", require("./Routes/userRoutes.js"));
-
-app.get("/api/hello", (res) => {
-  return res.json({
+app.get("/", (res) => {
+  return res.status(200).json({
     success: true,
     message: "Server is Running",
   });
 });
+
+// Define routes
+app.use("/api/auth", require("./Routes/authRoutes.js"));
+app.use("/api/chat", require("./Routes/chatRoutes.js"));
+app.use("/api/user", require("./Routes/userRoutes.js"));
 
 // Error handling middleware
 app.use((err, res) => {
